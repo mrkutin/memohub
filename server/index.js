@@ -20,8 +20,23 @@ db.on('connected', async () => {
   })
 
   app.get('/notes', async (req, res) => {
-    const cursor = await db.find({})
+    const cursor = await db.find(req.query)
     res.json(await cursor.toArray())
+  })
+
+  app.post('/notes', async (req, res) => {
+    const _id = await db.insert(req.body)
+    res.json({_id})
+  })
+
+  app.put('/notes/:id', async (req, res) => {
+    const result = await db.update({_id: req.params.id}, req.body)
+    res.json(result)
+  })
+
+  app.delete('/notes/:id', async (req, res) => {
+    const result = await db.remove({_id: req.params.id})
+    res.json(result)
   })
 
   app.listen(port, () => {

@@ -51,7 +51,35 @@ class DB extends EventEmitter {
         if (err) {
           return reject(err)
         }
-        return resolve({_id: insertedId})
+        return resolve(insertedId)
+      })
+    })
+  }
+
+  update(query, doc) {
+    if (typeof query._id === 'string') {
+      query._id = ObjectId(query._id)
+    }
+    return new Promise((resolve, reject) => {
+      this.collection.updateOne( query, {$set: doc}, {}, (err, {result}) => {
+        if (err) {
+          return reject(err)
+        }
+        return resolve(result)
+      })
+    })
+  }
+
+  remove(query) {
+    if (typeof query._id === 'string') {
+      query._id = ObjectId(query._id)
+    }
+    return new Promise((resolve, reject) => {
+      this.collection.remove( query, {}, (err, {result}) => {
+        if (err) {
+          return reject(err)
+        }
+        return resolve(result)
       })
     })
   }

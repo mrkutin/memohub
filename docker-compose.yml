@@ -1,0 +1,15 @@
+# DEV Dockerfile!!!
+version: "3.3"
+services:
+  couchdb:
+    image: couchdb:latest
+    environment:
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=Ke6y#g[5%jV*?JF>
+    volumes:
+      - data:/data/couchdb
+    ports:
+      - "5984:5984"
+
+volumes:
+  data:

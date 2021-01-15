@@ -4,9 +4,7 @@
     <b-container fluid=true>
       <b-row no-gutters>
         <div class="col-12 col-md-3">
-          <NotePreview />
-          <NotePreview />
-          <NotePreview />
+          <NoteList />
         </div>
         <div class="col-12 col-md-9">
           <NoteEditor />
@@ -18,14 +16,14 @@
 
 <script>
 import Navbar from './components/Navbar'
-import NotePreview from './components/NotePreview'
+import NoteList from './components/NoteList'
 import NoteEditor from './components/NoteEditor'
 
 export default {
   name: 'App',
   components: {
     Navbar,
-    NotePreview,
+    NoteList,
     NoteEditor
   }
 }

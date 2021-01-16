@@ -1,30 +1,29 @@
 <template>
-
   <b-form>
     <b-form-input
-        :value="selectedNote ? selectedNote.caption : ''"
+        :value="selectedNote.caption"
+        v-if="selectedNote"
+        size="lg"
         placeholder="Put your note caption here"
         required
         v-on:keyup="onCaptionType"
         v-on:change="onChange"
+        class=""
     ></b-form-input>
-    <b-form-textarea
-        :value="selectedNote ? selectedNote.text : ''"
-        placeholder="Put your note text here"
-        rows="20"
-        v-on:keyup="onTextType"
-        v-on:change="onChange"
-    />
+    <vue-editor v-if="selectedNote" v-model="selectedNote.text" />
   </b-form>
 </template>
 
 <script>
-
+import { VueEditor } from "vue2-editor"
 import {mapGetters} from 'vuex'
 
 export default {
   name: "NoteEditor",
   computed: mapGetters(['selectedNote']),
+  components: {
+    VueEditor
+  },
   methods: {
     onCaptionType(e) {
       this.selectedNote.caption = e.target.value
@@ -40,10 +39,20 @@ export default {
 </script>
 
 <style scoped>
-input, textarea {
+input {
   border: none;
   outline: 0 !important;
   -webkit-appearance: none;
   box-shadow: none !important;
+}
+</style>
+
+<style>
+#quill-container.ql-container.ql-snow {
+  border: none;
+}
+.quillWrapper .ql-snow.ql-toolbar {
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
 }
 </style>

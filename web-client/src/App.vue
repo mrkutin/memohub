@@ -3,10 +3,10 @@
     <Navbar />
     <b-container fluid=true>
       <b-row no-gutters>
-        <div class="col-12 col-md-3">
+        <div class="col-12 col-md-3 border-right ">
           <NoteList />
         </div>
-        <div class="col-12 col-md-9">
+        <div class="col-12 col-md-9 pl-3">
           <NoteEditor />
         </div>
       </b-row>
@@ -28,3 +28,4 @@ export default {
   }
 }
 </script>
+

@@ -6,10 +6,9 @@
       :title="caption"
       :sub-title="updatedAt.toDateString()"
       :bg-variant="_id === selectedNoteId || highlighted ? 'light' : 'default'"
+      class="custom-card border-top-0 border-right-0 border-left-0 border-bottom"
   >
-    <b-card-text>
-      {{text}}
-    </b-card-text>
+    <b-card-text v-html="text" class="text-truncate"/>
     <a href="#" class="card-link">Card link</a>
     <b-link href="#" class="card-link">Another link</b-link>
   </b-card>

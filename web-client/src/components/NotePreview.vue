@@ -1,10 +1,11 @@
 <template>
   <b-card
+      v-on:click="selectNote(_id)"
       v-on:mouseenter="toggleHighlight"
       v-on:mouseleave="toggleHighlight"
       :title="caption"
       :sub-title="updatedAt.toDateString()"
-      :bg-variant="highlighted ? 'light' : 'default'"
+      :bg-variant="_id === selectedNoteId || highlighted ? 'light' : 'default'"
   >
     <b-card-text>
       {{text}}
@@ -15,6 +16,8 @@
 </template>
 
 <script>
+import {mapActions, mapState} from 'vuex'
+
 export default {
   name: 'NotePreview',
   props: ['_id', 'caption', 'text', 'updatedAt'],
@@ -24,9 +27,11 @@ export default {
     }
   },
   methods: {
-    toggleHighlight () {
+    ...mapActions(['selectNote']),
+    toggleHighlight(){
       this.highlighted = !this.highlighted
     }
-  }
+  },
+  computed: mapState(['selectedNoteId'])
 }
 </script>

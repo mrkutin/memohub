@@ -26,10 +26,10 @@ export default {
   computed: mapState(['currentNote']),
   methods: {
     onCaptionType(e) {
-      this.note.caption = e.target.value
+      this.currentNote.caption = e.target.value
     },
     onTextType(e) {
-      this.note.text = e.target.value
+      this.currentNote.text = e.target.value
     },
     onChange(){
       //todo save it to the DB

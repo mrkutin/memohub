@@ -4,7 +4,7 @@
       <NoteList />
     </div>
     <div class="col-12 col-md-9 pl-3">
-      <NoteEditor />
+      <NoteEditor :note="currentNote"/>
     </div>
   </b-row>
 </template>
@@ -12,13 +12,16 @@
 <script>
 import NoteList from './NoteList'
 import NoteEditor from './NoteEditor'
+import {mapState} from 'vuex'
 
 export default {
   name: 'NoteListWithEditor',
   components: {
     NoteList,
     NoteEditor
-  }
+  },
+  computed: mapState(['currentNote'])
+
 
 }
 </script>

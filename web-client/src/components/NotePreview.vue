@@ -1,6 +1,6 @@
 <template>
   <b-card
-      v-on:click="selectNote(note)"
+      v-on:click="onClick"
       v-on:mouseenter="toggleHighlight"
       v-on:mouseleave="toggleHighlight"
       :title="note.caption"
@@ -27,6 +27,10 @@ export default {
     ...mapActions(['selectNote']),
     toggleHighlight(){
       this.highlighted = !this.highlighted
+    },
+    onClick(){
+      this.selectNote(this.note)
+      this.$router.push(`/notes/${this.note._id}`)
     }
   },
   computed: {

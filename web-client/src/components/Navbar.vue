@@ -14,7 +14,7 @@
           Notes
         </b-nav-item>
         <b-nav-item
-            to="/new-note"
+            to="/notes/new"
             exact
             exact-active-class="active"
         >

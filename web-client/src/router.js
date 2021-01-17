@@ -1,13 +1,13 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import NoteListWithEditor from './components/NoteListWithEditor'
+import NoteList from './components/NoteList'
 import NewNote from './components/NewNote'
 
 Vue.use(VueRouter)
 
 const routes = [
   { path: '/', redirect: '/notes' },
-  { path: '/notes', component: NoteListWithEditor },
+  { path: '/notes', component: NoteList },
   { path: '/new-note', component: NewNote }
 ]
 

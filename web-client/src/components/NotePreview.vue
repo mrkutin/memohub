@@ -8,6 +8,7 @@
       :bg-variant="isNoteCurrent(note) || highlighted ? 'light' : 'default'"
       class="custom-card border-top-0 border-right-0 border-left-0 border-bottom"
   >
+    <b-card-text v-html="note.text" class="text-truncate"/>
   </b-card>
 </template>
 

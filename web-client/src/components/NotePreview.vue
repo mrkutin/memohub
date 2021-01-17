@@ -5,7 +5,7 @@
       v-on:mouseleave="toggleHighlight"
       :title="caption"
       :sub-title="updatedAt.toDateString()"
-      :bg-variant="_id === selectedNoteId || highlighted ? 'light' : 'default'"
+      :bg-variant="_id === currentNoteId || highlighted ? 'light' : 'default'"
       class="custom-card border-top-0 border-right-0 border-left-0 border-bottom"
   >
     <b-card-text v-html="text" class="text-truncate"/>
@@ -31,6 +31,6 @@ export default {
       this.highlighted = !this.highlighted
     }
   },
-  computed: mapState(['selectedNoteId'])
+  computed: mapState(['currentNoteId'])
 }
 </script>

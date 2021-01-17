@@ -1,12 +1,26 @@
 <template>
   <b-navbar toggleable="lg" type="dark" variant="info">
-    <b-navbar-brand href="#">Memo Hub</b-navbar-brand>
+    <b-navbar-brand href="/">Memo Hub</b-navbar-brand>
 
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav>
-        <b-nav-item href="#" v-on:click="newNoteOpen">New note</b-nav-item>
+        <b-nav-item
+            to="/notes"
+            exact
+            exact-active-class="active"
+        >
+          Notes
+        </b-nav-item>
+        <b-nav-item
+            to="/new-note"
+            exact
+            exact-active-class="active"
+        >
+          New note
+        </b-nav-item>
+
       </b-navbar-nav>
 
       <!-- Right aligned nav items -->

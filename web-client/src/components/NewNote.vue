@@ -1,10 +1,10 @@
 <template>
-  <NoteEditor :note="currentNote"/>
+  <NoteEditor />
 </template>
 
 <script>
 import NoteEditor from './NoteEditor'
-import {mapGetters, mapActions} from 'vuex'
+import {mapActions} from 'vuex'
 
 export default {
   name: 'NewNote',
@@ -12,8 +12,7 @@ export default {
     NoteEditor
   },
   methods: mapActions(['createNote']),
-  computed: mapGetters(['currentNote']),
-  mounted: function () {
+  created: function () {
     this.createNote()
   }
 }

@@ -23,21 +23,25 @@ const state = {
     {_id: '6567698990898876777', caption: 'Second Note', text: 'This is my second note', updatedAt: new Date()},
     {_id: '0809789675765645646', caption: 'Third Note', text: 'This is my third note', updatedAt: new Date()}
   ],
-  currentNoteId: null
+  currentNote: null
 }
+
+state.currentNote = state.notes[0]
 
 const getters = {
   allNotes(state) {
     return state.notes
   },
-  currentNote(state) {
-    return state.notes.find(({_id}) => _id === state.currentNoteId)
+  isNoteCurrent(state) {
+    return (note) => {
+      return state.currentNote._id === note._id
+    }
   }
 }
 
 const mutations = {
-  setCurrentNoteId(state, noteId) {
-    state.currentNoteId = noteId
+  setCurrentNote(state, note) {
+    state.currentNote = note
   },
   addNote(state, note) {
     state.notes = [note, ...state.notes]
@@ -45,13 +49,13 @@ const mutations = {
 }
 
 const actions = {
-  selectNote({commit}, noteId) {
-    commit('setCurrentNoteId', noteId)
+  selectNote({commit}, note) {
+    commit('setCurrentNote', note)
   },
   createNote({commit}) {
     const note = {_id: generateId(12), capton: '', text: '', createdAt: new Date, updatedAt: new Date()}
     commit('addNote', note)
-    commit('setCurrentNoteId', note._id)
+    commit('setCurrentNote', note)
   }
 }
 

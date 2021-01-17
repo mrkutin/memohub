@@ -1,8 +1,8 @@
 <template>
   <b-form>
     <b-form-input
-        :value="note.caption"
-        v-if="note"
+        :value="currentNote.caption"
+        v-if="currentNote"
         size="lg"
         placeholder="Put your note caption here"
         required
@@ -10,19 +10,20 @@
         v-on:change="onChange"
         class=""
     ></b-form-input>
-    <vue-editor v-if="note" v-model="note.text" />
+    <vue-editor v-if="currentNote" v-model="currentNote.text" />
   </b-form>
 </template>
 
 <script>
 import { VueEditor } from "vue2-editor"
+import {mapState} from 'vuex'
 
 export default {
   name: "NoteEditor",
-  props: ['note'],
   components: {
     VueEditor
   },
+  computed: mapState(['currentNote']),
   methods: {
     onCaptionType(e) {
       this.note.caption = e.target.value

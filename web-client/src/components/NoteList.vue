@@ -1,6 +1,6 @@
 <template>
   <div>
-    <NotePreview v-for="note in allNotes" :key="note._id" v-bind="note" />
+    <NotePreview v-for="note in allNotes" :key="note._id" :note="note" />
   </div>
 </template>
 

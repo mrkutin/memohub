@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import NoteEditor from './NoteEditor'
+import NoteEditor from '../components/NoteEditor'
 import {mapActions, mapState} from 'vuex'
 
 export default {

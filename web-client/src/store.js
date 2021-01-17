@@ -31,11 +31,6 @@ state.currentNote = state.notes[0]
 const getters = {
   allNotes(state) {
     return state.notes
-  },
-  isNoteCurrent(state) {
-    return (note) => {
-      return state.currentNote._id === note._id
-    }
   }
 }
 

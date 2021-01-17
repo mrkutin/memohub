@@ -6,7 +6,7 @@
 
 <script>
 import {mapGetters} from 'vuex'
-import NotePreview from './NotePreview'
+import NotePreview from '../components/NotePreview'
 
 export default {
   name: "NoteList",

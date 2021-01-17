@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import NoteList from './components/NoteList'
-import NewNote from './components/NewNote'
+import NoteList from './pages/NoteList'
+import NewNote from './pages/NewNote'
 
 Vue.use(VueRouter)
 

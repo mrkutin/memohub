@@ -5,7 +5,7 @@
       v-on:mouseleave="toggleHighlight"
       :title="note.caption"
       :sub-title="note.updatedAt.toDateString()"
-      :bg-variant="isNoteCurrent(note) || highlighted ? 'light' : 'default'"
+      :bg-variant="highlighted ? 'light' : 'default'"
       class="custom-card border-top-0 border-right-0 border-left-0 border-bottom"
   >
     <b-card-text v-html="note.text" class="text-truncate"/>
@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import {mapActions, mapState, mapGetters} from 'vuex'
+import {mapActions, mapState} from 'vuex'
 
 export default {
   name: 'NotePreview',
@@ -30,8 +30,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['currentNote']),
-    ...mapGetters(['isNoteCurrent'])
+    ...mapState(['currentNote'])
   }
 }
 </script>

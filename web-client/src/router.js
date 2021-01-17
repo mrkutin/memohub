@@ -10,7 +10,7 @@ const routes = [
   { path: '/', redirect: '/notes' },
   { path: '/notes', component: NoteList },
   { path: '/notes/new', component: NewNote },
-  { path: '/notes/:id', component: EditNote }
+  { path: '/notes/:id', component: EditNote, props: true }
 ]
 
 const router = new VueRouter({

@@ -44,7 +44,8 @@ const mutations = {
 }
 
 const actions = {
-  selectNote({commit}, note) {
+  selectNoteById({commit, state}, noteId) {
+    const note = state.notes.find(note => note._id === noteId)
     commit('setCurrentNote', note)
   },
   createNote({commit}) {

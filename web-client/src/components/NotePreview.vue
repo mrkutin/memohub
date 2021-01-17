@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import {mapActions, mapState} from 'vuex'
+import {mapState} from 'vuex'
 
 export default {
   name: 'NotePreview',
@@ -24,12 +24,10 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['selectNote']),
     toggleHighlight(){
       this.highlighted = !this.highlighted
     },
     onClick(){
-      this.selectNote(this.note)
       this.$router.push(`/notes/${this.note._id}`)
     }
   },

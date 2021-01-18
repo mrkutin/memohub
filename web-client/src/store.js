@@ -39,6 +39,11 @@ const actions = {
     const note = await db.get(res.id)
     commit('addNote', note)
     return note
+  },
+  async saveNote(ctx, note) {
+    const res = await db.put(note)
+    const {_rev} = await db.get(res.id)
+    note._rev = _rev
   }
 }
 

@@ -1,21 +1,20 @@
 <template>
   <b-form>
     <b-form-input
-        :value="note.caption"
-        v-if="note"
-        size="lg"
         placeholder="Put your note caption here"
+        size="lg"
         required
-        v-on:keyup="onCaptionType"
-        v-on:change="onChange"
-        class=""
+        v-model="note.caption"
+        v-if="note"
+        v-on:change="onCaptionChange"
     ></b-form-input>
-    <vue-editor v-if="note" v-model="note.text" />
+    <vue-editor v-if="note" v-model="note.text" v-on:text-change="onTextChange"/>
   </b-form>
 </template>
 
 <script>
 import { VueEditor } from "vue2-editor"
+import {mapActions} from 'vuex'
 
 export default {
   name: "NoteEditor",
@@ -24,14 +23,12 @@ export default {
     VueEditor
   },
   methods: {
-    onCaptionType(e) {
-      this.note.caption = e.target.value
+    ...mapActions(['saveNote']),
+    onCaptionChange(){
+      this.saveNote(this.note)
     },
-    onTextType(e) {
-      this.note.text = e.target.value
-    },
-    onChange(){
-      //todo save it to the DB
+    onTextChange(){
+      this.saveNote(this.note)
     }
   }
 }

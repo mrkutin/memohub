@@ -28,6 +28,8 @@
 </template>
 
 <script>
+import {mapActions} from 'vuex'
+
 export default {
   name: 'NotePreview',
   props: ['note'],
@@ -37,8 +39,9 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['deleteNote']),
     onDeleteClick(){
-      alert()
+      this.deleteNote(this.note)
     },
     toggleHovered() {
       this.hovered = !this.hovered

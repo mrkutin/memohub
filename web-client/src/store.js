@@ -26,6 +26,10 @@ const getters = {
 const mutations = {
   addNote(state, note) {
     state.notes = [note, ...state.notes]
+  },
+  removeNote(state, _note) {
+    const idx = state.notes.findIndex(note => note._id === _note._id)
+    state.notes.splice(idx, 1)
   }
 }
 
@@ -46,6 +50,10 @@ const actions = {
     const res = await db.put(note)
     const {_rev} = await db.get(res.id)
     note._rev = _rev
+  },
+  async deleteNote({commit}, note) {
+    commit('removeNote', note)
+    await db.remove(note)
   }
 }
 

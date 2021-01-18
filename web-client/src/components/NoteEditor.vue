@@ -1,5 +1,5 @@
 <template>
-  <b-form>
+  <div>
     <b-form-input
         placeholder="Put your caption here"
         size="lg"
@@ -7,13 +7,15 @@
         v-model="note.caption"
         v-if="note"
         v-on:change="onChange"
-    ></b-form-input>
+    />
     <vue-editor
         placeholder="Put your note here"
         v-if="note"
         v-model="note.text"
-        v-on:text-change="debouncedOnChange"/>
-  </b-form>
+        v-on:text-change="debouncedOnChange"
+    />
+  </div>
+
 </template>
 
 <script>
@@ -26,6 +28,11 @@ export default {
   props: ['note'],
   components: {
     VueEditor
+  },
+  data() {
+    return {
+      showDismissibleAlert: true
+    }
   },
   computed: {
     debouncedOnChange: function() {

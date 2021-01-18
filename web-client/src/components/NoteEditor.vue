@@ -1,20 +1,25 @@
 <template>
   <b-form>
     <b-form-input
-        placeholder="Put your note caption here"
+        placeholder="Put your caption here"
         size="lg"
         required
         v-model="note.caption"
         v-if="note"
-        v-on:change="onCaptionChange"
+        v-on:change="onChange"
     ></b-form-input>
-    <vue-editor v-if="note" v-model="note.text" v-on:text-change="onTextChange"/>
+    <vue-editor
+        placeholder="Put your note here"
+        v-if="note"
+        v-model="note.text"
+        v-on:text-change="debouncedOnChange"/>
   </b-form>
 </template>
 
 <script>
 import { VueEditor } from "vue2-editor"
 import {mapActions} from 'vuex'
+import {debounce} from '@/util'
 
 export default {
   name: "NoteEditor",
@@ -22,12 +27,14 @@ export default {
   components: {
     VueEditor
   },
+  computed: {
+    debouncedOnChange: function() {
+      return debounce(this.onChange, 1000);
+    },
+  },
   methods: {
     ...mapActions(['saveNote']),
-    onCaptionChange(){
-      this.saveNote(this.note)
-    },
-    onTextChange(){
+    onChange: function (){
       this.saveNote(this.note)
     }
   }

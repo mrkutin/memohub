@@ -11,7 +11,7 @@ const state = {
   notes: [],
 }
 
-db.allDocs({include_docs: true})
+const fetchAll = db.allDocs({include_docs: true, descending: true })
   .then(res => {
       state.notes = res.rows.map(row => row.doc)
     }
@@ -30,11 +30,13 @@ const mutations = {
 }
 
 const actions = {
-  selectNoteById({state}, noteId) {
+  async selectNoteById({state}, noteId) {
+    await fetchAll
     return state.notes.find(note => note._id === noteId)
   },
   async createNote({commit}) {
-    const noteTemplate = {caption: 'Caption', text: '', createdAt: new Date, updatedAt: new Date()}
+    await fetchAll
+    const noteTemplate = {createdAt: new Date, updatedAt: new Date()}
     const res = await db.post(noteTemplate)
     const note = await db.get(res.id)
     commit('addNote', note)

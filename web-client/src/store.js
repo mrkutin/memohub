@@ -9,7 +9,6 @@ Vue.use(Vuex)
 
 const state = {
   notes: [],
-  currentNote: null
 }
 
 db.allDocs({include_docs: true})
@@ -18,8 +17,6 @@ db.allDocs({include_docs: true})
     }
   )
 
-state.currentNote = state.notes[0]
-
 const getters = {
   allNotes(state) {
     return state.notes
@@ -27,25 +24,21 @@ const getters = {
 }
 
 const mutations = {
-  setCurrentNote(state, note) {
-    state.currentNote = note
-  },
   addNote(state, note) {
     state.notes = [note, ...state.notes]
   }
 }
 
 const actions = {
-  selectNoteById({commit, state}, noteId) {
-    const note = state.notes.find(note => note._id === noteId)
-    commit('setCurrentNote', note)
+  selectNoteById({state}, noteId) {
+    return state.notes.find(note => note._id === noteId)
   },
   async createNote({commit}) {
     const noteTemplate = {caption: 'Caption', text: '', createdAt: new Date, updatedAt: new Date()}
     const res = await db.post(noteTemplate)
     const note = await db.get(res.id)
     commit('addNote', note)
-    commit('setCurrentNote', note)
+    return note
   }
 }
 

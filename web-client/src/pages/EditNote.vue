@@ -1,10 +1,10 @@
 <template>
-  <NoteEditor :note="currentNote"/>
+  <NoteEditor :note="note"/>
 </template>
 
 <script>
 import NoteEditor from '../components/NoteEditor'
-import {mapState, mapActions} from 'vuex'
+import {mapActions} from 'vuex'
 
 export default {
   name: 'EditNote',
@@ -12,10 +12,14 @@ export default {
   components: {
     NoteEditor
   },
-  computed: mapState(['currentNote']),
+  data: () => {
+    return {
+      note: null
+    }
+  },
   methods: mapActions(['selectNoteById']),
-  created() {
-    this.selectNoteById(this.id)
+  async created() {
+    this.note = await this.selectNoteById(this.id)
   }
 }
 </script>

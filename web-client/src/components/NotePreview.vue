@@ -13,7 +13,6 @@
 </template>
 
 <script>
-import {mapState} from 'vuex'
 
 export default {
   name: 'NotePreview',
@@ -30,9 +29,6 @@ export default {
     onClick(){
       this.$router.push(`/notes/${this.note._id}`)
     }
-  },
-  computed: {
-    ...mapState(['currentNote'])
   }
 }
 </script>

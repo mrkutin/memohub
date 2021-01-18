@@ -1,20 +1,24 @@
 <template>
-  <NoteEditor :note="currentNote"/>
+  <NoteEditor :note="note"/>
 </template>
 
 <script>
 import NoteEditor from '../components/NoteEditor'
-import {mapActions, mapState} from 'vuex'
+import {mapActions} from 'vuex'
 
 export default {
   name: 'NewNote',
   components: {
     NoteEditor
   },
-  methods: mapActions(['createNote']),
-  created: function () {
-    this.createNote()
+  data: () => {
+    return {
+      note: null
+    }
   },
-  computed: mapState(['currentNote'])
+  methods: mapActions(['createNote']),
+  async created () {
+    this.note = await this.createNote()
+  }
 }
 </script>

@@ -1,5 +1,20 @@
 <template>
   <div>
+    <b-toast
+        :id="note._id"
+        auto-hide-delay="5000"
+        variant="warning"
+        solid
+        toaster="b-toaster-top-right"
+    >
+      <template #toast-title>
+        <strong class="mr-auto">Attention! You are going to delete a note</strong>
+      </template>
+      <div class="d-flex justify-content-between align-items-baseline ">
+        <p>Are you sure?</p>
+        <b-button variant="danger" v-on:click="deleteNote(note)">Yes, delete it!</b-button>
+      </div>
+    </b-toast>
     <b-card
         v-on:click="onEditClick"
         v-on:mouseenter="toggleHovered"
@@ -15,7 +30,7 @@
             <b-button title="Edit note" v-on:click.stop="onEditClick">
               <b-icon icon="file-earmark-text" aria-hidden="true"></b-icon>
             </b-button>
-            <b-button title="Delete note" v-on:click.stop="onDeleteClick">
+            <b-button title="Delete note" v-on:click.stop="toast">
               <b-icon icon="x-circle-fill" aria-hidden="true"></b-icon>
             </b-button>
           </b-button-group>
@@ -35,13 +50,14 @@ export default {
   props: ['note'],
   data() {
     return {
+      modalShow: true,
       hovered: false
     }
   },
   methods: {
     ...mapActions(['deleteNote']),
-    onDeleteClick(){
-      this.deleteNote(this.note)
+    toast() {
+      this.$bvToast.show(this.note._id)
     },
     toggleHovered() {
       this.hovered = !this.hovered

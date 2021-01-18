@@ -4,7 +4,7 @@
       v-on:mouseenter="toggleHighlight"
       v-on:mouseleave="toggleHighlight"
       :title="note.caption"
-      :sub-title="note.updatedAt.toDateString()"
+      :sub-title="new Date(note.updatedAt).toDateString()"
       :bg-variant="highlighted ? 'light' : 'default'"
       class="custom-card border-top-0 border-right-0 border-left-0 border-bottom"
   >

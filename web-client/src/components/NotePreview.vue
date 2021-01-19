@@ -36,7 +36,7 @@
           </b-button-group>
         </b-button-toolbar>
       </b-list-group-item>
-      <b-card-sub-title class="ml-2">{{new Date(note.updatedAt).toDateString()}}</b-card-sub-title>
+      <b-card-sub-title class="ml-2">{{updatedAt}}</b-card-sub-title>
       <b-card-text v-html="note.text" class="text-truncate ml-2"/>
     </b-card>
   </div>
@@ -52,6 +52,12 @@ export default {
     return {
       modalShow: true,
       hovered: false
+    }
+  },
+  computed: {
+    updatedAt(){
+      const date = new Date(this.note.updatedAt)
+      return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
     }
   },
   methods: {

@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import NoteList from './pages/NoteList'
+import NoteListWithEditor from './pages/NoteListWithEditor'
 import NewNote from './pages/NewNote'
 import EditNote from './pages/EditNote'
 
@@ -8,7 +8,7 @@ Vue.use(VueRouter)
 
 const routes = [
   { path: '/', redirect: '/notes' },
-  { path: '/notes', component: NoteList },
+  { path: '/notes', component: NoteListWithEditor },
   { path: '/notes/new', component: NewNote },
   { path: '/notes/:id', component: EditNote, props: true }
 ]

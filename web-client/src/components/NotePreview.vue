@@ -47,7 +47,7 @@ import {mapActions} from 'vuex'
 
 export default {
   name: 'NotePreview',
-  props: ['note'],
+  props: ['note', 'isEditorVisible'],
   data() {
     return {
       modalShow: true,
@@ -63,7 +63,11 @@ export default {
       this.hovered = !this.hovered
     },
     onEditClick() {
-      this.$router.push(`/notes/${this.note._id}`)
+      if (!this.isEditorVisible){
+        this.$router.push(`/notes/${this.note._id}`)
+      } else {
+        this.$emit('note-selected', this.note)
+      }
     }
   }
 }

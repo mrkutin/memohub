@@ -30,13 +30,6 @@
           <b-button size="sm" class="my-2 my-sm-0" type="submit">Search</b-button>
         </b-nav-form>
 
-        <b-nav-item-dropdown text="Lang" right>
-          <b-dropdown-item href="#">EN</b-dropdown-item>
-          <b-dropdown-item href="#">ES</b-dropdown-item>
-          <b-dropdown-item href="#">RU</b-dropdown-item>
-          <b-dropdown-item href="#">FA</b-dropdown-item>
-        </b-nav-item-dropdown>
-
         <b-nav-item-dropdown right>
           <!-- Using 'button-content' slot -->
           <template #button-content>
@@ -45,6 +38,14 @@
           <b-dropdown-item href="#">Profile</b-dropdown-item>
           <b-dropdown-item href="#">Sign Out</b-dropdown-item>
         </b-nav-item-dropdown>
+
+        <b-nav-item
+            to="/signup"
+            exact
+            exact-active-class="active"
+        >
+          Sign up
+        </b-nav-item>
       </b-navbar-nav>
     </b-collapse>
   </b-navbar>

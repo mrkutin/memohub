@@ -1,36 +1,54 @@
 <template>
-  <div>
-    <b-card
-        style="max-width: 20rem;"
-        class="mb-2"
-    >
-      <b-form @submit="onSubmit" @reset="onReset" >
+  <div class="row mt-5">
+    <b-card class="col-lg-4 col-md-6 mx-auto">
+      <b-form>
         <b-form-group
-            id="input-group-1"
-            label="Email address:"
-            label-for="input-1"
-            description="We'll never share your email with anyone else."
+            label="Email:"
+            description="We'll never share your email with anyone else"
         >
           <b-form-input
-              id="input-1"
+              name="email"
               type="email"
-              placeholder="Enter email"
+              placeholder="example@mail.com"
               required
           ></b-form-input>
         </b-form-group>
 
-        <b-form-group id="input-group-2" label="Your Name:" label-for="input-2">
+        <b-form-group
+            label="Name:"
+            description="The name you see on your profile"
+        >
           <b-form-input
-              id="input-2"
+              name="name"
+              type="text"
               placeholder="Enter name"
               required
           ></b-form-input>
         </b-form-group>
 
+        <b-form-group
+            label="Password:"
+            description="Keep it strong, your privacy depends on it"
+        >
+          <b-form-input
+              name="password"
+              type="password"
+              required
+          ></b-form-input>
+        </b-form-group>
 
+        <b-form-group
+            label="Password once again:"
+            description="To exlude mistypes"
+        >
+          <b-form-input
+              name="password-once-again"
+              type="password"
+              required
+          ></b-form-input>
+        </b-form-group>
 
-        <b-button type="submit" variant="primary">Submit</b-button>
-        <b-button type="reset" variant="danger">Reset</b-button>
+        <b-button class="" type="submit" variant="info">Submit</b-button>
       </b-form>
     </b-card>
 
@@ -45,5 +63,10 @@ export default {
 </script>
 
 <style scoped>
-
+  .screen-center{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
 </style>

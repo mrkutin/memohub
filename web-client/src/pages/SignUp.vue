@@ -23,6 +23,7 @@
               type="text"
               placeholder="Enter name"
               required
+              :state="true"
           ></b-form-input>
         </b-form-group>
 
@@ -34,6 +35,7 @@
               name="password"
               type="password"
               required
+              :state="false"
           ></b-form-input>
         </b-form-group>
 

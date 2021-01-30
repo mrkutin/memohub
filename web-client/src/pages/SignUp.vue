@@ -1,7 +1,7 @@
 <template>
   <div class="row mt-5">
     <b-card class="col-lg-4 col-md-6 mx-auto">
-      <b-form>
+      <b-form novalidate v-on:submit.prevent="signUp">
         <b-form-group
             label="Email:"
             description="We'll never share your email with anyone else"
@@ -59,8 +59,11 @@
 </template>
 
 <script>
+import {mapActions} from 'vuex'
+
 export default {
-  name: 'SignUp'
+  name: 'SignUp',
+  methods: mapActions(['signUp'])
 }
 </script>
 

@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import PouchDB from 'pouchdb-browser'
+import axios from 'axios'
 
 const db = new PouchDB('notes');
 
@@ -34,10 +35,20 @@ const mutations = {
 }
 
 const actions = {
+  async signUp() {
+    axios.put('http://localhost:5984/_users/org.couchdb.user:serge', {
+      name: 'serge',
+      password: '1qaz1qaz',
+      roles: [],
+      type: 'user'
+    })
+  },
+
   async selectNoteById({state}, noteId) {
     await fetchAll
     return state.notes.find(note => note._id === noteId)
   },
+
   async createNote({commit}) {
     await fetchAll
     const noteTemplate = {createdAt: new Date, updatedAt: new Date()}
@@ -46,11 +57,13 @@ const actions = {
     commit('addNote', note)
     return note
   },
+
   async saveNote(ctx, note) {
     const res = await db.put(note)
     const {_rev} = await db.get(res.id)
     note._rev = _rev
   },
+
   async deleteNote({commit}, note) {
     commit('removeNote', note)
     await db.remove(note)

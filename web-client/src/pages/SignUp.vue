@@ -1,60 +1,60 @@
 <template>
   <div class="row mt-5">
     <b-card class="col-lg-4 col-md-6 mx-auto">
-      <b-form novalidate v-on:submit.prevent="signUp">
-        <b-form-group
-            label="Email:"
-            description="We'll never share your email with anyone else"
-        >
-          <b-form-input
-              name="email"
-              type="email"
-              placeholder="example@mail.com"
-              required
-          ></b-form-input>
-        </b-form-group>
-
+      <b-form novalidate v-on:submit.prevent="createUser">
         <b-form-group
             label="Name:"
-            description="The name you see on your profile"
+            :description="usernameMessage || 'The name you see on your profile'"
         >
           <b-form-input
-              name="name"
+              v-model="username"
               type="text"
               placeholder="Enter name"
               required
-              :state="true"
+              :state="usernameState"
           ></b-form-input>
         </b-form-group>
 
         <b-form-group
             label="Password:"
-            description="Keep it strong, your privacy depends on it"
+            :description="passwordMessage || 'Keep it strong, your privacy depends on it'"
         >
           <b-form-input
-              name="password"
+              v-model="password"
               type="password"
               required
-              :state="false"
+              :state="passwordState"
           ></b-form-input>
         </b-form-group>
 
         <b-form-group
             label="Password once again:"
-            description="To exlude mistypes"
+            :description="passwordOnceAgainMessage || 'To exlude mistypes'"
         >
           <b-form-input
-              name="password-once-again"
+              v-model="passwordOnceAgain"
               type="password"
               required
+              :state="passwordOnceAgainState"
+          ></b-form-input>
+        </b-form-group>
+
+        <b-form-group
+            label="Email:"
+            :description="emailMessage || 'We\'ll never share your email with anyone else'"
+        >
+          <b-form-input
+              v-model="email"
+              type="email"
+              placeholder="example@mail.com"
+              required
+              :state="emailState"
           ></b-form-input>
         </b-form-group>
 
         <b-button class="" type="submit" variant="info">Submit</b-button>
       </b-form>
     </b-card>
-
-
   </div>
 </template>
 
@@ -63,15 +63,94 @@ import {mapActions} from 'vuex'
 
 export default {
   name: 'SignUp',
-  methods: mapActions(['signUp'])
+  data() {
+    return {
+      email: '',
+      emailState: undefined,
+      emailMessage: '',
+
+      username: '',
+      usernameState: undefined,
+      usernameMessage: '',
+
+      password: '',
+      passwordState: undefined,
+      passwordMessage: '',
+
+      passwordOnceAgain: '',
+      passwordOnceAgainState: undefined,
+      passwordOnceAgainMessage: ''
+    }
+  },
+  methods: {
+    ...mapActions(['signUp']),
+    validate() {
+      if (!this.email.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
+        this.emailState = false
+        this.emailMessage = 'Email is invalid'
+      } else {
+        this.emailState = true
+        this.emailMessage = ''
+      }
+
+      if (!this.username) {
+        this.usernameState = false
+        this.usernameMessage = 'Name can\'t be blank'
+      } else {
+        this.usernameState = true
+        this.usernameMessage = ''
+      }
+
+      if (this.password !== this.passwordOnceAgain) {
+        this.passwordState = false
+        this.passwordMessage = 'Passwords don\'t match'
+        this.passwordOnceAgainState = false
+        this.passwordOnceAgainMessage = 'Passwords don\'t match'
+      } else {
+        this.passwordState = true
+        this.passwordMessage = ''
+        this.passwordOnceAgainState = true
+        this.passwordOnceAgainMessage = ''
+      }
+
+      if (!this.password) {
+        this.passwordState = false
+        this.passwordMessage = 'Password can\'t be blank'
+      } else {
+        this.passwordState = true
+        this.passwordMessage = ''
+      }
+
+      if (!this.passwordOnceAgain) {
+        this.passwordOnceAgainState = false
+        this.passwordOnceAgainMessage = 'Password can\'t be blank'
+      } else {
+        this.passwordOnceAgainState = true
+        this.passwordOnceAgainMessage = ''
+      }
+
+      return this.emailState && this.usernameState && this.passwordState && this.passwordOnceAgainState
+    },
+    async createUser() {
+      if(this.validate()){
+        try {
+          await this.signUp({email: this.email, username: this.username, password: this.password})
+          //todo redirect
+        } catch (err) {
+          this.usernameState = false
+          this.usernameMessage = err.message
+        }
+      }
+    }
+  },
 }
 </script>
 
 <style scoped>
-  .screen-center{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
+.screen-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
 </style>

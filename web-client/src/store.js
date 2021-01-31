@@ -35,13 +35,24 @@ const mutations = {
 }
 
 const actions = {
-  async signUp() {
-    axios.put('http://localhost:5984/_users/org.couchdb.user:serge', {
-      name: 'serge',
-      password: '1qaz1qaz',
-      roles: [],
-      type: 'user'
-    })
+  async signUp(state, {email, username, password}) {
+    const name = username.replace(/[^a-z0-9]/gi,'').toLowerCase()
+    try {
+      return await axios.put(`http://localhost:5984/_users/org.couchdb.user:${name}`, {
+        name,// system immutable name
+        email,
+        username,// real user's name
+        password,
+        roles: [],
+        type: 'user'
+      })
+    } catch (err) {
+      if (err.response && err.response.status === 409) {
+        return Promise.reject(new Error('User with such a name already exists'))
+      } else {
+        return Promise.reject(err)
+      }
+    }
   },
 
   async selectNoteById({state}, noteId) {

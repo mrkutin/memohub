@@ -8,6 +8,9 @@ const db = new PouchDB('notes');
 
 Vue.use(Vuex)
 
+console.log('store')
+
+
 const state = {
   notes: [],
 }
@@ -38,7 +41,8 @@ const actions = {
   async signUp(state, {email, username, password}) {
     const name = username.replace(/[^a-z0-9]/gi,'').toLowerCase()
     try {
-      return await axios.put(`http://localhost:5984/_users/org.couchdb.user:${name}`, {
+      //create a user
+      await axios.put(`http://localhost:5984/_users/org.couchdb.user:${name}`, {
         name,// system immutable name
         email,
         username,// real user's name
@@ -53,6 +57,24 @@ const actions = {
         return Promise.reject(err)
       }
     }
+
+    try {
+      //set AuthSession cookie
+      await axios.post('http://localhost:5984/_session', {
+          name,
+          password
+        },
+        {
+          withCredentials: true
+        })
+    } catch (err) {
+      //todo process unauthenticated calls
+      return Promise.reject(err)
+    }
+
+    // set user's name todo move to login mutation
+    window.localStorage.setItem('user', JSON.stringify({name, email, username}))
+    return Promise.resolve()
   },
 
   async selectNoteById({state}, noteId) {

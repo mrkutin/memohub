@@ -28,14 +28,27 @@ const mutations = {
   addNote(state, note) {
     state.notes = [note, ...state.notes]
   },
+  
   removeNote(state, _note) {
     const idx = state.notes.findIndex(note => note._id === _note._id)
     state.notes.splice(idx, 1)
+  },
+  
+  setAxiosHeaders(state) {
+    axios.defaults.headers.common['Authorization'] = state.token
+  },
+  
+  createToken(state, name, password) {
+    state.token = 'Basic ' + btoa(`${name}:${password}`)
+  },
+
+  saveToken(state) {
+    window.localStorage.setItem('token', state.token)
   }
 }
 
 const actions = {
-  async signUp(state, {email, username, password}) {
+  async signUp({commit}, {email, username, password}) {
     const name = username.replace(/[^a-z0-9]/gi,'').toLowerCase()
     try {
       //create a user
@@ -55,24 +68,10 @@ const actions = {
       }
     }
 
-    // todo move to login mutation
-    axios.defaults.headers.common['Authorization'] = 'Basic ' + btoa(`${name}:${password}`)
+    commit('createToken', name, password)
+    commit('setAxiosHeaders')
+    commit('saveToken')
 
-    try {
-      await axios.get(`http://localhost:5984/_users/org.couchdb.user:${name}`, {
-          name,
-          password
-        })
-    } catch (err) {
-      if (err.response && err.response.status === 401) {
-        return Promise.reject(new Error('Username or password wasn’t recognized'))
-      } else {
-        return Promise.reject(err)
-      }
-    }
-
-    // set user's name todo move to login mutation
-    window.localStorage.setItem('user', JSON.stringify({name, email, username}))
     return Promise.resolve()
   },
 

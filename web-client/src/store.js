@@ -8,9 +8,6 @@ const db = new PouchDB('notes');
 
 Vue.use(Vuex)
 
-console.log('store')
-
-
 const state = {
   notes: [],
 }
@@ -58,18 +55,20 @@ const actions = {
       }
     }
 
+    // todo move to login mutation
+    axios.defaults.headers.common['Authorization'] = 'Basic ' + btoa(`${name}:${password}`)
+
     try {
-      //set AuthSession cookie
-      await axios.post('http://localhost:5984/_session', {
+      await axios.get(`http://localhost:5984/_users/org.couchdb.user:${name}`, {
           name,
           password
-        },
-        {
-          withCredentials: true
         })
     } catch (err) {
-      //todo process unauthenticated calls
-      return Promise.reject(err)
+      if (err.response && err.response.status === 401) {
+        return Promise.reject(new Error('Username or password wasn’t recognized'))
+      } else {
+        return Promise.reject(err)
+      }
     }
 
     // set user's name todo move to login mutation

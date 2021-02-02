@@ -4,6 +4,7 @@ import NoteListWithEditor from './pages/NoteListWithEditor'
 import NewNote from './pages/NewNote'
 import EditNote from './pages/EditNote'
 import SignUp from './pages/SignUp'
+import LogIn from './pages/LogIn'
 
 Vue.use(VueRouter)
 
@@ -12,7 +13,8 @@ const routes = [
   { path: '/notes', component: NoteListWithEditor },
   { path: '/notes/new', component: NewNote },
   { path: '/notes/:id', component: EditNote, props: true },
-  { path: '/signup', component: SignUp }
+  { path: '/signup', component: SignUp },
+  { path: '/login', component: LogIn }
 ]
 
 const router = new VueRouter({

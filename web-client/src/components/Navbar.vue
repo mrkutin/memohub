@@ -46,6 +46,13 @@
         >
           Sign up
         </b-nav-item>
+        <b-nav-item
+            to="/login"
+            exact
+            exact-active-class="active"
+        >
+          Log In
+        </b-nav-item>
       </b-navbar-nav>
     </b-collapse>
   </b-navbar>

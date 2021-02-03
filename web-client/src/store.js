@@ -1,22 +1,31 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import PouchDB from 'pouchdb-browser'
+import PouchDB from 'pouchdb'
+import pouchdbFind from 'pouchdb-find'
+PouchDB.plugin(pouchdbFind)
+
 import axios from 'axios'
 
-const db = new PouchDB('notes');
-
 Vue.use(Vuex)
+
+const usersDB = new PouchDB('http://localhost:5984/_users')
+console.log('usersDB: ', usersDB)
+usersDB.find({
+  selector: {
+    email: 'serge.kutin@gmail.com'
+  }
+}).then(console.log)
 
 const state = {
   notes: [],
 }
 
-const fetchAll = db.allDocs({include_docs: true, descending: true })
-  .then(res => {
-      state.notes = res.rows.map(row => row.doc)
-    }
-  )
+// const fetchAll = db.allDocs({include_docs: true, descending: true })
+//   .then(res => {
+//       state.notes = res.rows.map(row => row.doc)
+//     }
+//   )
 
 const getters = {
   allNotes(state) {
@@ -28,16 +37,16 @@ const mutations = {
   addNote(state, note) {
     state.notes = [note, ...state.notes]
   },
-  
+
   removeNote(state, _note) {
     const idx = state.notes.findIndex(note => note._id === _note._id)
     state.notes.splice(idx, 1)
   },
-  
+
   setAxiosHeaders(state) {
     axios.defaults.headers.common['Authorization'] = state.token
   },
-  
+
   createToken(state, name, password) {
     state.token = 'Basic ' + btoa(`${name}:${password}`)
   },
@@ -76,28 +85,18 @@ const actions = {
   },
 
   async selectNoteById({state}, noteId) {
-    await fetchAll
     return state.notes.find(note => note._id === noteId)
   },
 
-  async createNote({commit}) {
-    await fetchAll
-    const noteTemplate = {createdAt: new Date, updatedAt: new Date()}
-    const res = await db.post(noteTemplate)
-    const note = await db.get(res.id)
-    commit('addNote', note)
-    return note
+  async createNote() {
+
   },
 
-  async saveNote(ctx, note) {
-    const res = await db.put(note)
-    const {_rev} = await db.get(res.id)
-    note._rev = _rev
+  async saveNote() {
   },
 
-  async deleteNote({commit}, note) {
-    commit('removeNote', note)
-    await db.remove(note)
+  async deleteNote() {
+
   }
 }
 

@@ -135,7 +135,7 @@ export default {
       if(this.validate()){
         try {
           await this.signUp({email: this.email, username: this.username, password: this.password})
-          //todo redirect
+          this.$router.push('/')
         } catch (err) {
           this.usernameState = false
           this.usernameMessage = err.message

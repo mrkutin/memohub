@@ -1,7 +1,7 @@
 <template>
   <div class="row mt-5">
     <b-card class="col-lg-4 col-md-6 mx-auto">
-      <b-form novalidate v-on:submit.prevent="createUser">
+      <b-form novalidate v-on:submit.prevent="submit">
         <b-form-group
             label="Name:"
             :description="usernameMessage || 'The name you see on your profile'"
@@ -9,7 +9,6 @@
           <b-form-input
               v-model="username"
               type="text"
-              placeholder="Enter name"
               required
               :state="usernameState"
           ></b-form-input>
@@ -46,7 +45,6 @@
           <b-form-input
               v-model="email"
               type="email"
-              placeholder="example@mail.com"
               required
               :state="emailState"
           ></b-form-input>
@@ -131,7 +129,7 @@ export default {
 
       return this.emailState && this.usernameState && this.passwordState && this.passwordOnceAgainState
     },
-    async createUser() {
+    async submit() {
       if(this.validate()){
         try {
           await this.signUp({email: this.email, username: this.username, password: this.password})

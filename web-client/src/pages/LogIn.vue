@@ -1,23 +1,24 @@
 <template>
   <div class="row mt-5">
     <b-card class="col-lg-4 col-md-6 mx-auto">
-      <b-form novalidate v-on:submit.prevent="">
+      <b-form novalidate v-on:submit.prevent="submit">
         <b-form-group
             label="Name:"
-            :description="'The name you see on your profile'"
+            description="Your name, username or email"
         >
           <b-form-input
+              v-model="username"
               type="text"
-              placeholder="Enter name"
               required
           ></b-form-input>
         </b-form-group>
 
         <b-form-group
             label="Password:"
-            :description="'Keep it strong, your privacy depends on it'"
+            description="Your password"
         >
           <b-form-input
+              v-model="password"
               type="password"
               required
           ></b-form-input>
@@ -30,9 +31,23 @@
 </template>
 
 <script>
+import {mapActions} from 'vuex'
+
 
 export default {
   name: 'LogIn',
+  data () {
+    return {
+      username: '',
+      password: ''
+    }
+  },
+  methods: {
+    ...mapActions(['logIn']),
+    submit() {
+      this.logIn({username: this.username, password: this.password})
+    }
+  }
 }
 </script>
 

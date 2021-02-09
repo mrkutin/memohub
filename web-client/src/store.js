@@ -8,26 +8,34 @@ PouchDB.plugin(pouchdbFind)
 
 Vue.use(Vuex)
 
-
-// const usersDB = new PouchDB('http://localhost:5984/_users')
-
 const state = {
-  notes: [],
+  user: null,
+  userDB: null
 }
 
 const getters = {
-  allNotes(state) {
-    return state.notes
-  },
-
-  asciiToHex(str) {
-    str.split('').map(char => Number(char).toString(16)).join('')
-  }
 }
 
 const mutations = {
   setUser(state, user) {
-    state.user = user
+    const name = user._id.split('org.couchdb.user:')[1]
+    state.user = {
+      ...user,
+      name,
+      dbName: `userdb-${name.split('').map(char => char.charCodeAt(0).toString(16)).join('')}`
+    }
+  },
+
+  setUserDB(state, password) {
+    state.userDB = new PouchDB(`http://localhost:5984/${state.user.dbName}`,
+      {
+        auth:
+          {
+            username: state.user.name,
+            password
+          }
+      })
+    //state.userDB.allDocs().then(console.log)
   },
 
   addNote(state, note) {
@@ -41,7 +49,7 @@ const mutations = {
 }
 
 const actions = {
-  async identifyUser({commit}, username) {
+  async logIn({commit}, {username, password}) {
     const res = await fetch(`http://localhost:5984/_users/_find`, {
       method: 'POST',
       headers: {
@@ -68,11 +76,8 @@ const actions = {
     }
 
     commit('setUser', json.docs[0])
-    return Promise.resolve()
-  },
+    commit('setUserDB', password)
 
-  async logIn({dispatch}, {username}) {
-    await dispatch('identifyUser', username)
     return Promise.resolve()
   },
 

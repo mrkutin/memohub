@@ -30,16 +30,24 @@
           <b-button size="sm" class="my-2 my-sm-0" type="submit">Search</b-button>
         </b-nav-form>
 
-        <b-nav-item-dropdown right>
+        <b-nav-item-dropdown right v-if="isLoggedIn">
           <!-- Using 'button-content' slot -->
           <template #button-content>
             <em>User</em>
           </template>
           <b-dropdown-item href="#">Profile</b-dropdown-item>
-          <b-dropdown-item href="#">Sign Out</b-dropdown-item>
+          <b-dropdown-item
+             v-if="isLoggedIn"
+             v-on:click="clickLogOut"
+             exact
+             exact-active-class="active"
+          >
+            Log Out
+          </b-dropdown-item>
         </b-nav-item-dropdown>
 
         <b-nav-item
+            v-if="!isLoggedIn"
             to="/signup"
             exact
             exact-active-class="active"
@@ -47,6 +55,7 @@
           Sign up
         </b-nav-item>
         <b-nav-item
+            v-if="!isLoggedIn"
             to="/login"
             exact
             exact-active-class="active"
@@ -54,6 +63,7 @@
           Log In
         </b-nav-item>
         <b-nav-item
+            v-if="isLoggedIn"
             v-on:click="clickLogOut"
             exact
             exact-active-class="active"
@@ -66,10 +76,11 @@
 </template>
 
 <script>
-import {mapActions} from 'vuex'
+import {mapActions, mapGetters} from 'vuex'
 
 export default {
   name: 'Navbar',
+  computed: mapGetters(['isLoggedIn']),
   methods: {
     ...mapActions(['logOut']),
     clickLogOut() {

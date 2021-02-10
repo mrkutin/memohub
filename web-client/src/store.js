@@ -14,6 +14,9 @@ const state = {
 }
 
 const getters = {
+  isLoggedIn(state) {
+    return state.user !== null
+  }
 }
 
 const mutations = {

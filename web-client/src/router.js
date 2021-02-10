@@ -5,11 +5,12 @@ import NewNote from './pages/NewNote'
 import EditNote from './pages/EditNote'
 import SignUp from './pages/SignUp'
 import LogIn from './pages/LogIn'
+import Index from './pages/Index'
 
 Vue.use(VueRouter)
 
 const routes = [
-  { path: '/', redirect: '/notes' },
+  { path: '/', component: Index },
   { path: '/notes', component: NoteListWithEditor },
   { path: '/notes/new', component: NewNote },
   { path: '/notes/:id', component: EditNote, props: true },

@@ -53,17 +53,28 @@
         >
           Log In
         </b-nav-item>
+        <b-nav-item
+            v-on:click="clickLogOut"
+            exact
+            exact-active-class="active"
+        >
+          Log Out
+        </b-nav-item>
       </b-navbar-nav>
     </b-collapse>
   </b-navbar>
 </template>
 
 <script>
+import {mapActions} from 'vuex'
+
 export default {
   name: 'Navbar',
   methods: {
-    newNoteOpen: function() {
-      this.$store.commit('newNoteDialogOpen')
+    ...mapActions(['logOut']),
+    clickLogOut() {
+      this.logOut()
+      this.$router.push('/')
     }
   }
 }

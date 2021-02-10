@@ -81,7 +81,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['signUp']),
+    ...mapActions(['signUp', 'logIn']),
     validate() {
       if (!this.email.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
         this.emailState = false
@@ -133,7 +133,7 @@ export default {
       if(this.validate()){
         try {
           await this.signUp({email: this.email, username: this.username, password: this.password})
-          this.$router.push('/')
+          this.$router.push('/login')
         } catch (err) {
           this.usernameState = false
           this.usernameMessage = err.message

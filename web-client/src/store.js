@@ -17,6 +17,15 @@ const getters = {
 }
 
 const mutations = {
+
+  unsetUser(state) {
+    state.user = null
+  },
+
+  unsetUserDB(state) {
+    state.userDB = null
+  },
+
   setUser(state, user) {
     const name = user._id.split('org.couchdb.user:')[1]
     state.user = {
@@ -49,6 +58,11 @@ const mutations = {
 }
 
 const actions = {
+  logOut({commit}) {
+    commit('unsetUser')
+    commit('unsetUserDB')
+  },
+
   async logIn({commit}, {username, password}) {
     const res = await fetch(`http://localhost:5984/_users/_find`, {
       method: 'POST',

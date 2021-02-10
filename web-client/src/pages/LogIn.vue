@@ -33,7 +33,6 @@
 <script>
 import {mapActions} from 'vuex'
 
-
 export default {
   name: 'LogIn',
   data () {
@@ -44,8 +43,9 @@ export default {
   },
   methods: {
     ...mapActions(['logIn']),
-    submit() {
-      this.logIn({username: this.username, password: this.password})
+    async submit() {
+      await this.logIn({username: this.username, password: this.password})
+      await this.$router.push('/')
     }
   }
 }

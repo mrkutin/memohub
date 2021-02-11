@@ -45,7 +45,7 @@ export default {
     ...mapActions(['logIn']),
     async submit() {
       await this.logIn({username: this.username, password: this.password})
-      await this.$router.push('/')
+      await this.$router.push('/notes')
     }
   }
 }

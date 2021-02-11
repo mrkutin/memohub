@@ -11,7 +11,13 @@ PouchDB.plugin(pouchdbFind)
 Vue.use(Vuex)
 
 const user = getCookie('user') !== undefined ? JSON.parse(getCookie('user')) : null
-const createUserDB = ({dbName, name: username, password}) => new PouchDB(`http://localhost:5984/${dbName}`, {auth: {username, password}})
+const createUserDB = (user) => {
+  if (!user) {
+    return null
+  }
+  const {dbName, name: username, password} = user
+  return new PouchDB(`http://localhost:5984/${dbName}`, {auth: {username, password}})
+}
 
 const state = {
   user,

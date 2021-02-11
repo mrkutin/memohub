@@ -4,14 +4,21 @@ import Vuex from 'vuex'
 import PouchDB from 'pouchdb-browser'
 import pouchdbFind from 'pouchdb-find'
 
+import {getCookie, setCookie} from './util'
+
 PouchDB.plugin(pouchdbFind)
 
 Vue.use(Vuex)
 
+const user = getCookie('user') !== undefined ? JSON.parse(getCookie('user')) : null
+const createUserDB = ({dbName, name: username, password}) => new PouchDB(`http://localhost:5984/${dbName}`, {auth: {username, password}})
+
 const state = {
-  user: null,
-  userDB: null
+  user,
+  userDB: createUserDB(user)
 }
+
+// state.userDB.allDocs().then(console.log)
 
 const getters = {
   isLoggedIn(state) {
@@ -33,6 +40,10 @@ const mutations = {
     state.userDB = null
   },
 
+  saveCurrentUser(state) {
+    setCookie('user', JSON.stringify(state.user))
+  },
+
   setUser(state, user) {
     const name = user._id.split('org.couchdb.user:')[1]
     state.user = {
@@ -42,16 +53,8 @@ const mutations = {
     }
   },
 
-  setUserDB(state, password) {
-    state.userDB = new PouchDB(`http://localhost:5984/${state.user.dbName}`,
-      {
-        auth:
-          {
-            username: state.user.name,
-            password
-          }
-      })
-    //state.userDB.allDocs().then(console.log)
+  setUserDB(state) {
+    state.userDB = createUserDB(state.user.dbName, state.user.name, state.user.password)
   },
 
   addNote(state, note) {
@@ -67,6 +70,7 @@ const mutations = {
 const actions = {
   logOut({commit}) {
     commit('unsetUser')
+    commit('saveCurrentUser')
     commit('unsetUserDB')
   },
 
@@ -96,8 +100,9 @@ const actions = {
       return Promise.reject(new Error('User not found'))
     }
 
-    commit('setUser', json.docs[0])
-    commit('setUserDB', password)
+    commit('setUser', {...json.docs[0], password})
+    commit('saveCurrentUser')
+    commit('setUserDB')
 
     return Promise.resolve()
   },

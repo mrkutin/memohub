@@ -33,7 +33,7 @@
         <b-nav-item-dropdown right v-if="isLoggedIn">
           <!-- Using 'button-content' slot -->
           <template #button-content>
-            <em>User</em>
+            <em>{{userName}}</em>
           </template>
           <b-dropdown-item href="#">Profile</b-dropdown-item>
           <b-dropdown-item
@@ -62,14 +62,6 @@
         >
           Log In
         </b-nav-item>
-        <b-nav-item
-            v-if="isLoggedIn"
-            v-on:click="clickLogOut"
-            exact
-            exact-active-class="active"
-        >
-          Log Out
-        </b-nav-item>
       </b-navbar-nav>
     </b-collapse>
   </b-navbar>
@@ -80,7 +72,7 @@ import {mapActions, mapGetters} from 'vuex'
 
 export default {
   name: 'Navbar',
-  computed: mapGetters(['isLoggedIn']),
+  computed: mapGetters(['isLoggedIn', 'userName']),
   methods: {
     ...mapActions(['logOut']),
     clickLogOut() {

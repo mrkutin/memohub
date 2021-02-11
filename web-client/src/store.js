@@ -16,6 +16,10 @@ const state = {
 const getters = {
   isLoggedIn(state) {
     return state.user !== null
+  },
+
+  userName(state) {
+    return state.user.username
   }
 }
 

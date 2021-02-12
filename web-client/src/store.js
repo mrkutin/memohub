@@ -35,11 +35,9 @@ const getters = {
     return state.user.username
   },
 
-  allNotes: ({db}) => () => db
-    .allDocs({
-      include_docs: true
-    })
-    .then(({docs}) => docs)
+  allNotes(state) {
+    return state.notes
+  }
 }
 
 const mutations = {
@@ -48,7 +46,7 @@ const mutations = {
     state.user = null
   },
 
-  unsetdb(state) {
+  unsetDB(state) {
     state.db = null
   },
 
@@ -65,7 +63,7 @@ const mutations = {
     }
   },
 
-  setdb(state) {
+  setDB(state) {
     state.db = createdb(state.user.dbName, state.user.name, state.user.password)
   },
 
@@ -83,7 +81,7 @@ const actions = {
   logOut({commit}) {
     commit('unsetUser')
     commit('saveCurrentUser')
-    commit('unsetdb')
+    commit('unsetDB')
   },
 
   async logIn({commit}, {username, password}) {
@@ -114,7 +112,7 @@ const actions = {
 
     commit('setUser', {...json.docs[0], password})
     commit('saveCurrentUser')
-    commit('setdb')
+    commit('setDB')
 
     return Promise.resolve()
   },
@@ -152,11 +150,14 @@ const actions = {
     return state.notes.find(note => note._id === noteId)
   },
 
-  async createNote() {
-    return {createdAt: new Date, updatedAt: new Date()}
+  createNote({commit}) {
+    const note = {createdAt: new Date, updatedAt: new Date()}
+    commit('addNote', note)
+    return note
   },
 
   async saveNote(ctx, note) {
+    console.log('note: ', note)
     return note
     // const {state: {db}} = ctx
     // let res

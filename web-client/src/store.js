@@ -12,7 +12,7 @@ PouchDB.plugin(pouchdbFind)
 Vue.use(Vuex)
 
 const user = getCookie('user') !== undefined ? JSON.parse(getCookie('user')) : null
-const createUserDB = (user) => {
+const createdb = (user) => {
   if (!user) {
     return null
   }
@@ -22,10 +22,9 @@ const createUserDB = (user) => {
 
 const state = {
   user,
-  userDB: createUserDB(user)
+  db: createdb(user),
+  notes: []
 }
-
-// state.userDB.allDocs().then(console.log)
 
 const getters = {
   isLoggedIn(state) {
@@ -36,7 +35,7 @@ const getters = {
     return state.user.username
   },
 
-  allNotes: ({userDB}) => () => userDB
+  allNotes: ({db}) => () => db
     .allDocs({
       include_docs: true
     })
@@ -49,8 +48,8 @@ const mutations = {
     state.user = null
   },
 
-  unsetUserDB(state) {
-    state.userDB = null
+  unsetdb(state) {
+    state.db = null
   },
 
   saveCurrentUser(state) {
@@ -62,12 +61,12 @@ const mutations = {
     state.user = {
       ...user,
       name,
-      dbName: `userdb-${name.split('').map(char => char.charCodeAt(0).toString(16)).join('')}`
+      dbName: `db-${name.split('').map(char => char.charCodeAt(0).toString(16)).join('')}`
     }
   },
 
-  setUserDB(state) {
-    state.userDB = createUserDB(state.user.dbName, state.user.name, state.user.password)
+  setdb(state) {
+    state.db = createdb(state.user.dbName, state.user.name, state.user.password)
   },
 
   addNote(state, note) {
@@ -84,7 +83,7 @@ const actions = {
   logOut({commit}) {
     commit('unsetUser')
     commit('saveCurrentUser')
-    commit('unsetUserDB')
+    commit('unsetdb')
   },
 
   async logIn({commit}, {username, password}) {
@@ -115,7 +114,7 @@ const actions = {
 
     commit('setUser', {...json.docs[0], password})
     commit('saveCurrentUser')
-    commit('setUserDB')
+    commit('setdb')
 
     return Promise.resolve()
   },
@@ -149,19 +148,29 @@ const actions = {
     return Promise.resolve()
   },
 
-  async selectNoteById({state}, noteId) {
+  async selectNoteById(ctx, noteId) {
     return state.notes.find(note => note._id === noteId)
   },
 
-  async createNote() {
-
+  async createNote({commit}) {
+    const note = {createdAt: new Date, updatedAt: new Date()}
+    commit('addNote', note)
+    return note
   },
 
-  async saveNote() {
+  async saveNote({state: {db}}, note) {
+    let res
+    if(note._id) {
+      res = await db.put(note)
+    } else {
+      res = await db.post(note)
+    }
+    return db.get(res.id)
   },
 
-  async deleteNote() {
-
+  async deleteNote({commit, state: {db}}, note) {
+    commit('removeNote', note)
+    await db.remove(note)
   }
 }
 

@@ -34,7 +34,13 @@ const getters = {
 
   userName(state) {
     return state.user.username
-  }
+  },
+
+  allNotes: ({userDB}) => () => userDB
+    .allDocs({
+      include_docs: true
+    })
+    .then(({docs}) => docs)
 }
 
 const mutations = {
@@ -103,7 +109,7 @@ const actions = {
     }
 
     const json = await res.json()
-    if (!json.docs || !json.docs.length){
+    if (!json.docs || !json.docs.length) {
       return Promise.reject(new Error('User not found'))
     }
 

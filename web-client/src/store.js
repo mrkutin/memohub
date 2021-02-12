@@ -61,7 +61,7 @@ const mutations = {
     state.user = {
       ...user,
       name,
-      dbName: `db-${name.split('').map(char => char.charCodeAt(0).toString(16)).join('')}`
+      dbName: `memohub-${name.split('').map(char => char.charCodeAt(0).toString(16)).join('')}`
     }
   },
 
@@ -152,25 +152,25 @@ const actions = {
     return state.notes.find(note => note._id === noteId)
   },
 
-  async createNote({commit}) {
-    const note = {createdAt: new Date, updatedAt: new Date()}
-    commit('addNote', note)
+  async createNote() {
+    return {createdAt: new Date, updatedAt: new Date()}
+  },
+
+  async saveNote(ctx, note) {
     return note
+    // const {state: {db}} = ctx
+    // let res
+    // if(note._id) {
+    //   res = await db.put(note)
+    // } else {
+    //   res = await db.post(note)
+    // }
+    // return db.get(res.id)
   },
 
-  async saveNote({state: {db}}, note) {
-    let res
-    if(note._id) {
-      res = await db.put(note)
-    } else {
-      res = await db.post(note)
-    }
-    return db.get(res.id)
-  },
-
-  async deleteNote({commit, state: {db}}, note) {
-    commit('removeNote', note)
-    await db.remove(note)
+  async deleteNote() {// {commit, state: {db}}, note
+    // commit('removeNote', note)
+    // await db.remove(note)
   }
 }
 

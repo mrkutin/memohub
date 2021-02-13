@@ -11,8 +11,7 @@ PouchDB.plugin(pouchdbFind)
 
 Vue.use(Vuex)
 
-const user = getCookie('user') !== undefined ? JSON.parse(getCookie('user')) : null
-const createdb = (user) => {
+const createDb = (user) => {
   if (!user) {
     return null
   }
@@ -20,9 +19,12 @@ const createdb = (user) => {
   return new PouchDB(`${couchDbUrl}/${dbName}`, {auth: {username, password}})
 }
 
+const user = getCookie('user') !== undefined ? JSON.parse(getCookie('user')) : null
+const db = createDb(user)
+
 const state = {
   user,
-  db: createdb(user),
+  db,
   notes: []
 }
 
@@ -63,8 +65,12 @@ const mutations = {
     }
   },
 
+  setNotes(state, notes) {
+    state.notes = notes
+  },
+
   setDB(state) {
-    state.db = createdb(state.user.dbName, state.user.name, state.user.password)
+    state.db = createDb(state.user.dbName, state.user.name, state.user.password)
   },
 
   addNote(state, note) {
@@ -158,18 +164,25 @@ const actions = {
 
   async saveNote(ctx, note) {
     const {state: {db}} = ctx
-    let res
-    if(note._id) {
-      res = await db.put(note)
+    if (note._id) {
+      const savedNote = await db.get(note._id)
+      await db.put({...note, _rev: savedNote._rev})
     } else {
-      res = await db.post(note)
+      await db.post(note)
     }
-    return db.get(res.id)
   },
 
-  async deleteNote() {// {commit, state: {db}}, note
-    // commit('removeNote', note)
-    // await db.remove(note)
+  async fetchAllNotes({state: {db}, commit}) {
+    const result = await db.allDocs({
+      include_docs: true,
+      descending: true
+    })
+    commit('setNotes', result.rows.map(({doc}) => doc))
+  },
+
+  async deleteNote({commit, state: {db}}, note) {
+    await db.remove(note)
+    commit('removeNote', note)
   }
 }
 

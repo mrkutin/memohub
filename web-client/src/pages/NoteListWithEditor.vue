@@ -32,8 +32,9 @@ export default {
     }
   },
   computed: mapState(['notes']),
-  created() {
-    this.fetchAllNotes()
+  async created() {
+    await this.fetchAllNotes()
+    this.notes.length && this.selectNote(this.notes[0])
   },
   methods: {
     ...mapActions(['fetchAllNotes']),

@@ -27,7 +27,7 @@ export default {
   },
   data(){
     return {
-      isEditorVisible: false,
+      isEditorVisible: false,//editor is not visible on mobile
       selectedNote: null
     }
   },

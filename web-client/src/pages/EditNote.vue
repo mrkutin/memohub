@@ -1,5 +1,5 @@
 <template>
-  <NoteEditor :note="note"/>
+  <NoteEditor :note="note" v-on:noteUpdated="updateNote"/>
 </template>
 
 <script>
@@ -17,7 +17,12 @@ export default {
       note: null
     }
   },
-  methods: mapActions(['selectNoteById']),
+  methods: {
+    ...mapActions(['selectNoteById']),
+    updateNote(note) {
+      this.note = note
+    }
+  },
   async created() {
     this.note = await this.selectNoteById(this.id)
   }

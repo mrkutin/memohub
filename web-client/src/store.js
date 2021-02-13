@@ -184,8 +184,9 @@ const actions = {
   },
 
   async deleteNote({commit, state: {db}}, note) {
-    await db.remove(note)
-    commit('removeNote', note)
+    const savedNote = await db.get(note._id)
+    await db.remove(savedNote)
+    commit('removeNote', savedNote)
   }
 }
 

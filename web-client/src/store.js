@@ -26,7 +26,8 @@ const state = {
   user,
   db,
   notes: [],
-  selectedNote: null
+  selectedNote: null,
+  isEditorVisible: false
 }
 
 const getters = {
@@ -72,6 +73,10 @@ const mutations = {
 
   setSelectedNote(state, note) {
     state.selectedNote = note
+  },
+
+  setEditorVisisble(state, isVisible) {
+    state.isEditorVisible = isVisible
   },
 
   setDB(state) {
@@ -157,12 +162,16 @@ const actions = {
     return Promise.resolve()
   },
 
-  async findNoteById(ctx, noteId) {
+  findNoteById({state}, noteId) {
     return state.notes.find(note => note._id === noteId)
   },
 
   selectNote({commit}, note) {
     commit('setSelectedNote', note)
+  },
+
+  updateEditorVisible({commit}, isVisible) {
+    commit('setEditorVisisble', isVisible)
   },
 
   createNote({commit}) {

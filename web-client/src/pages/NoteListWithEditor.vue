@@ -25,20 +25,15 @@ export default {
     NotePreview,
     NoteEditor
   },
-  data(){
-    return {
-      isEditorVisible: false,//editor is not visible on mobile
-    }
-  },
-  computed: mapState(['notes', 'selectedNote']),
+  computed: mapState(['notes', 'selectedNote', 'isEditorVisible']),
   async mounted() {
     await this.fetchAllNotes()
     this.notes.length && this.selectNote(this.notes[0])
   },
   methods: {
-    ...mapActions(['fetchAllNotes', 'selectNote']),
+    ...mapActions(['fetchAllNotes', 'selectNote', 'updateEditorVisible']),
     visibleHandler(isVisible) {
-      this.isEditorVisible = isVisible
+      this.updateEditorVisible(isVisible)
     }
   }
 }

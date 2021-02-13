@@ -15,14 +15,6 @@
           Notes
         </b-nav-item>
         <b-nav-item
-            to="/notes/new"
-            exact
-            exact-active-class="active"
-            v-if="isLoggedIn"
-        >
-          New note
-        </b-nav-item>
-        <b-nav-item
             v-if="isLoggedIn"
             v-on:click.prevent="onNewClick"
         >
@@ -76,19 +68,25 @@
 </template>
 
 <script>
-import {mapActions, mapGetters} from 'vuex'
+import {mapActions, mapGetters, mapState} from 'vuex'
 
 export default {
   name: 'Navbar',
-  computed: mapGetters(['isLoggedIn', 'userName']),
+  computed: {
+    ...mapGetters(['isLoggedIn', 'userName']),
+    ...mapState(['isEditorVisible'])
+  },
   methods: {
-    ...mapActions(['logOut', 'createNote']),
+    ...mapActions(['logOut', 'createNote', 'saveNote']),
     clickLogOut() {
       this.logOut()
       this.$router.push('/login')
     },
-    onNewClick() {
-      this.createNote()
+    async onNewClick() {
+      await this.createNote()
+      if(!this.isEditorVisible){
+        await this.$router.push('/notes/new')
+      }
     }
   }
 }

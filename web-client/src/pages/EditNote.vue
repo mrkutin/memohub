@@ -17,9 +17,9 @@ export default {
       note: null
     }
   },
-  methods: mapActions(['selectNoteById']),
+  methods: mapActions(['findNoteById']),
   async created() {
-    this.note = await this.selectNoteById(this.id)
+    this.note = await this.findNoteById(this.id)
   }
 }
 </script>

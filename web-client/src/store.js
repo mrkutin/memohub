@@ -157,18 +157,18 @@ const actions = {
     return Promise.resolve()
   },
 
-  // async selectNoteById(ctx, noteId) {
-  //   return state.notes.find(note => note._id === noteId)
-  // },
+  async findNoteById(ctx, noteId) {
+    return state.notes.find(note => note._id === noteId)
+  },
 
   selectNote({commit}, note) {
     commit('setSelectedNote', note)
   },
 
-
   createNote({commit}) {
     const note = {createdAt: new Date, updatedAt: new Date()}
     commit('addNote', note)
+    commit('setSelectedNote', note)
     return note
   },
 

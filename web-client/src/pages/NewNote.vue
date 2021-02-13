@@ -1,5 +1,5 @@
 <template>
-  <NoteEditor :note="note" v-on:noteUpdated="updateNote" />
+  <NoteEditor :note="note" v-on:note-updated="updateNote" />
 </template>
 
 <script>

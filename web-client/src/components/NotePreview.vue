@@ -61,16 +61,17 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['deleteNote']),
+    ...mapActions(['deleteNote', 'saveNote']),
     toast() {
       this.$bvToast.show(this.note._id)
     },
     toggleHovered() {
       this.hovered = !this.hovered
     },
-    onEditClick() {
+    async onEditClick() {
       if (!this.isEditorVisible){
-        this.$router.push(`/notes/${this.note._id}`)
+        const savedNote = await this.saveNote(this.note)
+        await this.$router.push(`/notes/${savedNote._id}`)
       } else {
         this.$emit('note-selected', this.note)
       }

@@ -70,7 +70,7 @@ const mutations = {
   },
 
   setDB(state) {
-    state.db = createDb(state.user.dbName, state.user.name, state.user.password)
+    state.db = createDb(state.user)
   },
 
   addNote(state, note) {
@@ -162,8 +162,11 @@ const actions = {
     return note
   },
 
-  async saveNote(ctx, note) {
-    const {state: {db}} = ctx
+  async saveNote({state: {db}} , note) {
+    if (!db) {
+      return Promise.resolve()
+    }
+
     if (note._id) {
       const savedNote = await db.get(note._id)
       const newNote = {...note, _rev: savedNote._rev}
@@ -176,6 +179,10 @@ const actions = {
   },
 
   async fetchAllNotes({state: {db}, commit}) {
+    if (!db) {
+      return
+    }
+
     const result = await db.allDocs({
       include_docs: true,
       descending: true
@@ -184,6 +191,10 @@ const actions = {
   },
 
   async deleteNote({commit, state: {db}}, note) {
+    if (!db) {
+      return
+    }
+
     const savedNote = await db.get(note._id)
     await db.remove(savedNote)
     commit('removeNote', savedNote)

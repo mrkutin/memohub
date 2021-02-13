@@ -10,6 +10,7 @@
             to="/notes"
             exact
             exact-active-class="active"
+            v-if="isLoggedIn"
         >
           Notes
         </b-nav-item>
@@ -17,6 +18,7 @@
             to="/notes/new"
             exact
             exact-active-class="active"
+            v-if="isLoggedIn"
         >
           New note
         </b-nav-item>

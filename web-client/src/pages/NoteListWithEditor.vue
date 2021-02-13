@@ -32,7 +32,7 @@ export default {
     }
   },
   computed: mapState(['notes']),
-  async created() {
+  async mounted() {
     await this.fetchAllNotes()
     this.notes.length && this.selectNote(this.notes[0])
   },

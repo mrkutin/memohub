@@ -28,19 +28,15 @@ export default {
   data(){
     return {
       isEditorVisible: false,//editor is not visible on mobile
-      selectedNote: null
     }
   },
-  computed: mapState(['notes']),
+  computed: mapState(['notes', 'selectedNote']),
   async mounted() {
     await this.fetchAllNotes()
     this.notes.length && this.selectNote(this.notes[0])
   },
   methods: {
-    ...mapActions(['fetchAllNotes']),
-    selectNote(note) {
-      this.selectedNote = note
-    },
+    ...mapActions(['fetchAllNotes', 'selectNote']),
     visibleHandler(isVisible) {
       this.isEditorVisible = isVisible
     }

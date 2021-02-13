@@ -25,7 +25,8 @@ const db = createDb(user)
 const state = {
   user,
   db,
-  notes: []
+  notes: [],
+  selectedNote: null
 }
 
 const getters = {
@@ -67,6 +68,10 @@ const mutations = {
 
   setNotes(state, notes) {
     state.notes = notes
+  },
+
+  setSelectedNote(state, note) {
+    state.selectedNote = note
   },
 
   setDB(state) {
@@ -152,9 +157,14 @@ const actions = {
     return Promise.resolve()
   },
 
-  async selectNoteById(ctx, noteId) {
-    return state.notes.find(note => note._id === noteId)
+  // async selectNoteById(ctx, noteId) {
+  //   return state.notes.find(note => note._id === noteId)
+  // },
+
+  selectNote({commit}, note) {
+    commit('setSelectedNote', note)
   },
+
 
   createNote({commit}) {
     const note = {createdAt: new Date, updatedAt: new Date()}
@@ -162,7 +172,7 @@ const actions = {
     return note
   },
 
-  async saveNote({state: {db}} , note) {
+  async saveNote({state: {db}}, note) {
     if (!db) {
       return Promise.resolve()
     }

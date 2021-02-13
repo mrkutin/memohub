@@ -157,16 +157,14 @@ const actions = {
   },
 
   async saveNote(ctx, note) {
-    console.log('note: ', note)
-    return note
-    // const {state: {db}} = ctx
-    // let res
-    // if(note._id) {
-    //   res = await db.put(note)
-    // } else {
-    //   res = await db.post(note)
-    // }
-    // return db.get(res.id)
+    const {state: {db}} = ctx
+    let res
+    if(note._id) {
+      res = await db.put(note)
+    } else {
+      res = await db.post(note)
+    }
+    return db.get(res.id)
   },
 
   async deleteNote() {// {commit, state: {db}}, note

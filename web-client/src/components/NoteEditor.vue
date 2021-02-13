@@ -41,8 +41,9 @@ export default {
   },
   methods: {
     ...mapActions(['saveNote']),
-    onChange: function (){
-      this.saveNote(this.note)
+    async onChange (){
+      this.note = await this.saveNote(this.note)
+      console.log(this.note)
     }
   }
 }

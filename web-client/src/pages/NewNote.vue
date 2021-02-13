@@ -1,5 +1,5 @@
 <template>
-  <NoteEditor :note="note" />
+  <NoteEditor :note="note" v-on:noteUpdated="updateNote" />
 </template>
 
 <script>
@@ -16,7 +16,12 @@ export default {
       note: null
     }
   },
-  methods: mapActions(['createNote']),
+  methods: {
+    ...mapActions(['createNote']),
+    updateNote(note) {
+      this.note = note
+    }
+  },
   async created () {
     this.note = await this.createNote()
   }

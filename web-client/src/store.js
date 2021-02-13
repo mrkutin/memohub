@@ -166,9 +166,12 @@ const actions = {
     const {state: {db}} = ctx
     if (note._id) {
       const savedNote = await db.get(note._id)
-      await db.put({...note, _rev: savedNote._rev})
+      const newNote = {...note, _rev: savedNote._rev}
+      await db.put(newNote)
+      return newNote
     } else {
       await db.post(note)
+      return db.get(note._id)
     }
   },
 

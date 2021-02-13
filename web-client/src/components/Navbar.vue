@@ -22,6 +22,12 @@
         >
           New note
         </b-nav-item>
+        <b-nav-item
+            v-if="isLoggedIn"
+            v-on:click.prevent="onNewClick"
+        >
+          New
+        </b-nav-item>
 
       </b-navbar-nav>
 
@@ -76,10 +82,13 @@ export default {
   name: 'Navbar',
   computed: mapGetters(['isLoggedIn', 'userName']),
   methods: {
-    ...mapActions(['logOut']),
+    ...mapActions(['logOut', 'createNote']),
     clickLogOut() {
       this.logOut()
       this.$router.push('/login')
+    },
+    onNewClick() {
+      this.createNote()
     }
   }
 }

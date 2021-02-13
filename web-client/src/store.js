@@ -170,8 +170,8 @@ const actions = {
       await db.put(newNote)
       return newNote
     } else {
-      await db.post(note)
-      return db.get(note._id)
+      const id = (await db.post(note)).id
+      return db.get(id)
     }
   },
 

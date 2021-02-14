@@ -6,15 +6,14 @@
         required
         v-model="note.caption"
         v-if="note"
-        v-on:change="onChange"
+        v-on:change="debouncedOnChange"
     />
     <vue-editor
         placeholder="Put your note here"
         v-if="note"
         v-model="note.text"
-        v-on:text-change="onChange"
+        v-on:text-change="debouncedOnChange"
     />
-    <b-btn></b-btn>
   </div>
 
 </template>

@@ -55,7 +55,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['isEditorVisible']),
+    ...mapState(['isEditorVisible', 'selectedNote']),
     updatedAt(){
       const date = new Date(this.note.updatedAt)
       return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
@@ -72,9 +72,8 @@ export default {
     async onEditClick() {
       this.selectNote(this.note)
       if (!this.isEditorVisible){
-        const savedNote = await this.saveNote(this.note)
-        await this.$router.push(`/notes/${savedNote._id}`)
-      } 
+        await this.$router.push(`/notes/${this.selectedNote._id}`)
+      }
     }
   }
 }

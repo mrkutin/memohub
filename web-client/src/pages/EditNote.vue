@@ -4,7 +4,7 @@
 
 <script>
 import NoteEditor from '../components/NoteEditor'
-import {mapActions, mapState} from 'vuex'
+import {mapState} from 'vuex'
 
 export default {
   name: 'EditNote',
@@ -18,13 +18,8 @@ export default {
     }
   },
   computed: mapState(['selectedNote']),
-  methods: mapActions(['findNoteById']),
   async created() {
-    if (this.id === 'new') {
-      this.note = this.selectedNote
-    } else {
-      this.note = await this.findNoteById(this.id)
-    }
+    this.note = this.selectedNote
   }
 }
 </script>

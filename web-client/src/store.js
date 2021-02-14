@@ -185,7 +185,6 @@ const actions = {
   },
 
   async saveNote({state: {db}, commit}, note) {
-    console.log('saveNote!!!', note)
     if (!db) {
       return Promise.resolve()
     }
@@ -194,12 +193,10 @@ const actions = {
       const savedNote = await db.get(note._id)
       const newNote = {...note, _rev: savedNote._rev}
       await db.put(newNote)
-      console.log('note put')
     } else {
       const id = (await db.post(note)).id
       commit('updateSelectedNoteWithId', id)
     }
-
   },
 
   selectNote({commit}, note) {
@@ -218,23 +215,7 @@ const actions = {
     const savedNote = await db.get(note._id)
     await db.remove(savedNote)
     commit('removeNote', savedNote)
-  },
-
-
-
-
-
-  //todo refactor
-  findNoteById({state}, noteId) {
-    return state.notes.find(note => note._id === noteId)
-  },
-
-
-
-
-
-
-
+  }
 }
 
 const store = new Vuex.Store({

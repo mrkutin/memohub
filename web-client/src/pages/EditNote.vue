@@ -1,25 +1,22 @@
 <template>
-  <NoteEditor :note="note" />
+  <div>
+    <NoteToolbar :note="selectedNote" />
+    <NoteEditor :note="selectedNote" />
+  </div>
 </template>
 
 <script>
 import NoteEditor from '../components/NoteEditor'
+import NoteToolbar from '../components/NoteToolbar'
 import {mapState} from 'vuex'
 
 export default {
   name: 'EditNote',
   props: ['id'],
   components: {
-    NoteEditor
-  },
-  data: () => {
-    return {
-      note: null
-    }
+    NoteEditor,
+    NoteToolbar
   },
   computed: mapState(['selectedNote']),
-  async created() {
-    this.note = this.selectedNote
-  }
 }
 </script>

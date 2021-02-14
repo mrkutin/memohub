@@ -7,7 +7,8 @@
       />
     </div>
     <div class="col-9 d-none d-lg-block border-left" v-b-visible="visibleHandler">
-      <NoteEditor :note="selectedNote"/>
+      <NoteToolbar :note="selectedNote" />
+      <NoteEditor :note="selectedNote" />
     </div>
   </div>
 </template>
@@ -16,12 +17,14 @@
 import {mapActions, mapState} from 'vuex'
 import NotePreview from '../components/NotePreview'
 import NoteEditor from '../components/NoteEditor'
+import NoteToolbar from '../components/NoteToolbar'
 
 export default {
   name: "NoteList",
   components: {
     NotePreview,
-    NoteEditor
+    NoteEditor,
+    NoteToolbar
   },
   computed: mapState(['notes', 'isEditorVisible', 'selectedNote']),
   async mounted() {

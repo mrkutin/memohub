@@ -12,8 +12,9 @@
         placeholder="Put your note here"
         v-if="note"
         v-model="note.text"
-        v-on:text-change="debouncedOnChange"
+        v-on:text-change="onChange"
     />
+    <b-btn></b-btn>
   </div>
 
 </template>
@@ -41,7 +42,7 @@ export default {
   },
   methods: {
     ...mapActions(['saveNote']),
-    async onChange (){
+    async onChange () {
       await this.saveNote(this.note)
     }
   }

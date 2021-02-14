@@ -75,6 +75,10 @@ const mutations = {
     state.selectedNote = note
   },
 
+  updateSelectedNoteWithId({selectedNote}, _id) {
+    selectedNote._id = _id
+  },
+
   setEditorVisisble(state, isVisible) {
     state.isEditorVisible = isVisible
   },
@@ -162,41 +166,6 @@ const actions = {
     return Promise.resolve()
   },
 
-  findNoteById({state}, noteId) {
-    return state.notes.find(note => note._id === noteId)
-  },
-
-  selectNote({commit}, note) {
-    commit('setSelectedNote', note)
-  },
-
-  updateEditorVisible({commit}, isVisible) {
-    commit('setEditorVisisble', isVisible)
-  },
-
-  createNote({commit}) {
-    const note = {createdAt: new Date, updatedAt: new Date()}
-    commit('addNote', note)
-    commit('setSelectedNote', note)
-    return note
-  },
-
-  async saveNote({state: {db}}, note) {
-    if (!db) {
-      return Promise.resolve()
-    }
-
-    if (note._id) {
-      const savedNote = await db.get(note._id)
-      const newNote = {...note, _rev: savedNote._rev}
-      await db.put(newNote)
-      return newNote
-    } else {
-      const id = (await db.post(note)).id
-      return db.get(id)
-    }
-  },
-
   async fetchAllNotes({state: {db}, commit}) {
     if (!db) {
       return
@@ -209,6 +178,38 @@ const actions = {
     commit('setNotes', result.rows.map(({doc}) => doc))
   },
 
+  createNote({commit}) {
+    const note = {createdAt: new Date, updatedAt: new Date()}
+    commit('addNote', note)
+    commit('setSelectedNote', note)
+  },
+
+  async saveNote({state: {db}, commit}, note) {
+    console.log('saveNote!!!', note)
+    if (!db) {
+      return Promise.resolve()
+    }
+
+    if (note._id) {
+      const savedNote = await db.get(note._id)
+      const newNote = {...note, _rev: savedNote._rev}
+      await db.put(newNote)
+      console.log('note put')
+    } else {
+      const id = (await db.post(note)).id
+      commit('updateSelectedNoteWithId', id)
+    }
+
+  },
+
+  selectNote({commit}, note) {
+    commit('setSelectedNote', note)
+  },
+
+  updateEditorVisible({commit}, isVisible) {
+    commit('setEditorVisisble', isVisible)
+  },
+
   async deleteNote({commit, state: {db}}, note) {
     if (!db) {
       return
@@ -217,7 +218,23 @@ const actions = {
     const savedNote = await db.get(note._id)
     await db.remove(savedNote)
     commit('removeNote', savedNote)
-  }
+  },
+
+
+
+
+
+  //todo refactor
+  findNoteById({state}, noteId) {
+    return state.notes.find(note => note._id === noteId)
+  },
+
+
+
+
+
+
+
 }
 
 const store = new Vuex.Store({

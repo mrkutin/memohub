@@ -4,8 +4,6 @@
       <NotePreview v-for="note in notes"
                    :key="note._id"
                    :note="note"
-                   :isEditorVisible="isEditorVisible"
-                   v-on:note-selected="selectNote"
       />
     </div>
     <div class="col-9 d-none d-lg-block border-left" v-b-visible="visibleHandler">
@@ -25,7 +23,7 @@ export default {
     NotePreview,
     NoteEditor
   },
-  computed: mapState(['notes', 'selectedNote', 'isEditorVisible']),
+  computed: mapState(['notes', 'isEditorVisible', 'selectedNote']),
   async mounted() {
     await this.fetchAllNotes()
     this.notes.length && this.selectNote(this.notes[0])

@@ -43,11 +43,11 @@
 </template>
 
 <script>
-import {mapActions} from 'vuex'
+import {mapActions, mapState} from 'vuex'
 
 export default {
   name: 'NotePreview',
-  props: ['note', 'isEditorVisible'],
+  props: ['note'],
   data() {
     return {
       modalShow: true,
@@ -55,13 +55,14 @@ export default {
     }
   },
   computed: {
+    ...mapState(['isEditorVisible']),
     updatedAt(){
       const date = new Date(this.note.updatedAt)
       return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
     }
   },
   methods: {
-    ...mapActions(['deleteNote', 'saveNote']),
+    ...mapActions(['deleteNote', 'saveNote', 'selectNote']),
     toast() {
       this.$bvToast.show(this.note._id)
     },
@@ -69,12 +70,11 @@ export default {
       this.hovered = !this.hovered
     },
     async onEditClick() {
+      this.selectNote(this.note)
       if (!this.isEditorVisible){
         const savedNote = await this.saveNote(this.note)
         await this.$router.push(`/notes/${savedNote._id}`)
-      } else {
-        this.$emit('note-selected', this.note)
-      }
+      } 
     }
   }
 }

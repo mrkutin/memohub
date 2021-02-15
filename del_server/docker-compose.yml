@@ -1,7 +1,0 @@
-# DEV Dockerfile!!!
-version: "3.3"
-services:
-  mongo:
-    image: mongo:4.4-bionic
-    ports:
-      - "27017:27017"

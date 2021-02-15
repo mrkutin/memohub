@@ -1,16 +1,14 @@
 <template>
-  <div>
+  <div v-if="note">
     <b-form-input
         placeholder="Put your caption here"
+        v-model="note.caption"
+        v-on:change="debouncedOnChange"
         size="lg"
         required
-        v-model="note.caption"
-        v-if="note"
-        v-on:change="debouncedOnChange"
     />
     <vue-editor
         placeholder="Put your note here"
-        v-if="note"
         v-model="note.text"
         v-on:text-change="debouncedOnChange"
     />

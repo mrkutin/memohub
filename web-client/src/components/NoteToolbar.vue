@@ -1,5 +1,5 @@
 <template>
-  <div class="h3 mt-2">
+  <div class="h3 mt-2" v-if="note">
     <b-button variant="light" v-on:click="onDeleteClick">
       <b-icon icon="trash"></b-icon>
     </b-button>
@@ -10,16 +10,16 @@
 </template>
 
 <script>
-import {mapActions, mapState} from 'vuex'
+import {mapActions} from 'vuex'
 
 export default {
   name: 'NoteToolbar',
-  computed: mapState(['selectedNote']),
+  props: ['note'],
   methods: {
     ...mapActions(['deleteNote']),
     onDeleteClick(){
       if (confirm('Are you sure?')) {
-        this.deleteNote(this.selectedNote)
+        this.deleteNote(this.note)
       }
     }
   }

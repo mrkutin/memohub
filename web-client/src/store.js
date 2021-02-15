@@ -207,7 +207,7 @@ const actions = {
     commit('setEditorVisisble', isVisible)
   },
 
-  async deleteNote({commit, state: {db}}, note) {
+  async deleteNote({commit, state: {db, notes}}, note) {
     if (!db) {
       return
     }
@@ -215,6 +215,10 @@ const actions = {
     const savedNote = await db.get(note._id)
     await db.remove(savedNote)
     commit('removeNote', savedNote)
+
+    if (notes.length) {
+      commit('setSelectedNote', notes[0])
+    }
   }
 }
 

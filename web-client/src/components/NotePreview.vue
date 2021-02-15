@@ -11,8 +11,8 @@
       <b-list-group-item class="d-flex justify-content-between align-items-center p-0 border-0 bg-transparent">
         <b-card-title>{{note.caption}}</b-card-title>
       </b-list-group-item>
-      <b-card-sub-title class="ml-2">{{updatedAt}}</b-card-sub-title>
-      <b-card-text v-html="note.text" class="text-truncate ml-2"/>
+      <b-card-sub-title class="small">{{updatedAt}}</b-card-sub-title>
+      <b-card-text class="text-truncate" v-html="note.text" />
     </b-card>
   </div>
 </template>

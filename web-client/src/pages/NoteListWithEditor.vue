@@ -29,10 +29,9 @@ export default {
   computed: mapState(['notes', 'isEditorVisible', 'selectedNote']),
   async mounted() {
     await this.fetchAllNotes()
-    this.notes.length && this.selectNote(this.notes[0])
   },
   methods: {
-    ...mapActions(['fetchAllNotes', 'selectNote', 'updateEditorVisible']),
+    ...mapActions(['fetchAllNotes', 'updateEditorVisible']),
     visibleHandler(isVisible) {
       this.updateEditorVisible(isVisible)
     }

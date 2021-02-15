@@ -37,11 +37,8 @@ const getters = {
 
   userName(state) {
     return state.user.username
-  },
-
-  allNotes(state) {
-    return state.notes
   }
+
 }
 
 const mutations = {
@@ -175,7 +172,44 @@ const actions = {
       include_docs: true,
       descending: true
     })
-    commit('setNotes', result.rows.map(({doc}) => doc))
+    const notes = result.rows.map(({doc}) => doc)
+    commit('setNotes', notes)
+    if (notes.length) {
+      commit('setSelectedNote', notes[0])
+    } else {
+      commit('setSelectedNote', null)
+    }
+  },
+
+  async fetchQuery({commit}, query) {
+    if (!db) {
+      return
+    }
+
+    const result = await db.find({
+      selector: {
+        $or: [
+          {
+            caption: {
+              $regex: `(?i)${query}`
+            }
+          },
+          {
+            text: {
+              $regex: `(?i)${query}`
+            }
+          }
+        ]
+      },
+      // sort: [{_id: 'desc'}]
+    })
+    const notes = result.docs
+    commit('setNotes', notes)
+    if (notes.length) {
+      commit('setSelectedNote',)
+    } else {
+      commit('setSelectedNote', null)
+    }
   },
 
   createNote({commit}) {

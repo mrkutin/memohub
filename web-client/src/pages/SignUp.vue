@@ -133,7 +133,8 @@ export default {
       if(this.validate()){
         try {
           await this.signUp({email: this.email, username: this.username, password: this.password})
-          this.$router.push('/login')
+          await this.logIn({username: this.username, password: this.password})
+          await this.$router.push('/notes')
         } catch (err) {
           this.usernameState = false
           this.usernameMessage = err.message

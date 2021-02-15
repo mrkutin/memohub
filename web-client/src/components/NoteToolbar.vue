@@ -1,12 +1,27 @@
 <template>
-  <div class="h3 mt-2 ml-3">
-    <b-icon class="mr-2" icon="trash" ></b-icon>
-    <b-icon class="mr-2" icon="link" ></b-icon>
+  <div class="h3 mt-2">
+    <b-button variant="light" v-on:click="onDeleteClick">
+      <b-icon icon="trash"></b-icon>
+    </b-button>
+    <b-button variant="light">
+      <b-icon icon="link"></b-icon>
+    </b-button>
   </div>
 </template>
 
 <script>
+import {mapActions, mapState} from 'vuex'
+
 export default {
-  name: 'NoteToolbar'
+  name: 'NoteToolbar',
+  computed: mapState(['selectedNote']),
+  methods: {
+    ...mapActions(['deleteNote']),
+    onDeleteClick(){
+      if (confirm('Are you sure?')) {
+        this.deleteNote(this.selectedNote)
+      }
+    }
+  }
 }
 </script>

@@ -213,7 +213,7 @@ const actions = {
   },
 
   createNote({commit}) {
-    const note = {createdAt: new Date, updatedAt: new Date()}
+    const note = {createdAt: new Date(), updatedAt: new Date()}
     commit('addNote', note)
     commit('setSelectedNote', note)
   },
@@ -225,7 +225,7 @@ const actions = {
 
     if (note._id) {
       const savedNote = await db.get(note._id)
-      const newNote = {...note, _rev: savedNote._rev}
+      const newNote = {...note, _rev: savedNote._rev, updatedAt: new Date()}
       await db.put(newNote)
     } else {
       const id = (await db.post(note)).id

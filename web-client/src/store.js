@@ -23,9 +23,17 @@ const getLocalDb = () => {
   return new PouchDB(`${pouchDbName}`)
 }
 
-
-
 const localDb = getLocalDb()
+localDb.createIndex({
+  index: {
+    fields: ['updatedAt']
+  }
+}).then(function (result) {
+  console.log('createIndex result: ', result)
+}).catch(function (err) {
+  console.log('createIndex error: ', err)
+})
+
 const user = getCookie('user') !== undefined ? JSON.parse(getCookie('user')) : null
 const remoteDb = getRemoteDb(user)
 
@@ -192,11 +200,14 @@ const actions = {
       return
     }
 
-    const result = await localDb.allDocs({
-      include_docs: true
+    const result = await localDb.find({
+      selector: {},
+      sort: [{updatedAt: 'desc'}]
     })
 
-    const notes = result.rows.map(({doc}) => doc)
+    console.log('result: ', result)
+
+    const notes = result.docs
     commit('setNotes', notes)
     if (notes.length) {
       commit('setSelectedNote', notes[0])

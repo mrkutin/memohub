@@ -10,15 +10,13 @@
             to="/notes"
             exact
             exact-active-class="active"
-            v-if="isLoggedIn"
         >
           Notes
         </b-nav-item>
         <b-nav-item
-            v-if="isLoggedIn"
             v-on:click.prevent="onNewClick"
         >
-          New
+          New note
         </b-nav-item>
 
       </b-navbar-nav>

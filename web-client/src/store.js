@@ -5,13 +5,13 @@ import PouchDB from 'pouchdb-browser'
 import pouchdbFind from 'pouchdb-find'
 
 import {getCookie, setCookie} from './util'
-import {couchDbUrl} from '@/config'
+import {couchDbUrl, pouchDbName} from '@/config'
 
 PouchDB.plugin(pouchdbFind)
 
 Vue.use(Vuex)
 
-const createDb = (user) => {
+const connectToRemoteDb = (user) => {
   if (!user) {
     return null
   }
@@ -19,12 +19,16 @@ const createDb = (user) => {
   return new PouchDB(`${couchDbUrl}/${dbName}`, {auth: {username, password}})
 }
 
+const connectToLocalDb = () => {
+  return new PouchDB(`${pouchDbName}`)
+}
+
 const user = getCookie('user') !== undefined ? JSON.parse(getCookie('user')) : null
-const db = createDb(user)
+const localDb = connectToLocalDb(user)
 
 const state = {
   user,
-  db,
+  localDb,
   notes: [],
   selectedNote: null,
   isEditorVisible: false
@@ -47,8 +51,8 @@ const mutations = {
     state.user = null
   },
 
-  unsetDB(state) {
-    state.db = null
+  unsetRemoteDb(state) {
+    state.remoteDb = null
   },
 
   saveCurrentUser(state) {
@@ -80,8 +84,8 @@ const mutations = {
     state.isEditorVisible = isVisible
   },
 
-  setDB(state) {
-    state.db = createDb(state.user)
+  setRemoteDb(state) {
+    state.remoteDb = connectToRemoteDb(state.user)
   },
 
   addNote(state, note) {
@@ -98,7 +102,7 @@ const actions = {
   logOut({commit}) {
     commit('unsetUser')
     commit('saveCurrentUser')
-    commit('unsetDB')
+    commit('unsetRemoteDb')
   },
 
   async logIn({commit}, {username, password}) {
@@ -129,7 +133,7 @@ const actions = {
 
     commit('setUser', {...json.docs[0], password})
     commit('saveCurrentUser')
-    commit('setDB')
+    commit('setRemoteDb')
 
     return Promise.resolve()
   },
@@ -163,14 +167,13 @@ const actions = {
     return Promise.resolve()
   },
 
-  async fetchAllNotes({state: {db}, commit}) {
-    if (!db) {
+  async fetchAllNotes({state: {localDb}, commit}) {
+    if (!localDb) {
       return
     }
 
-    const result = await db.allDocs({
-      include_docs: true,
-      descending: true
+    const result = await localDb.allDocs({
+      include_docs: true
     })
     const notes = result.rows.map(({doc}) => doc)
     commit('setNotes', notes)
@@ -182,11 +185,11 @@ const actions = {
   },
 
   async fetchQuery({commit}, query) {
-    if (!db) {
+    if (!localDb) {
       return
     }
 
-    const result = await db.find({
+    const result = await localDb.find({
       selector: {
         $or: [
           {
@@ -218,17 +221,17 @@ const actions = {
     commit('setSelectedNote', note)
   },
 
-  async saveNote({state: {db}, commit}, note) {
-    if (!db) {
+  async saveNote({state: {localDb}, commit}, note) {
+    if (!localDb) {
       return Promise.resolve()
     }
 
     if (note._id) {
-      const savedNote = await db.get(note._id)
+      const savedNote = await localDb.get(note._id)
       const newNote = {...note, _rev: savedNote._rev, updatedAt: new Date()}
-      await db.put(newNote)
+      await localDb.put(newNote)
     } else {
-      const id = (await db.post(note)).id
+      const id = (await localDb.post(note)).id
       commit('updateSelectedNoteWithId', id)
     }
   },
@@ -241,13 +244,13 @@ const actions = {
     commit('setEditorVisisble', isVisible)
   },
 
-  async deleteNote({commit, state: {db, notes}}, note) {
-    if (!db) {
+  async deleteNote({commit, state: {localDb, notes}}, note) {
+    if (!localDb) {
       return
     }
 
-    const savedNote = await db.get(note._id)
-    await db.remove(savedNote)
+    const savedNote = await localDb.get(note._id)
+    await localDb.remove(savedNote)
     commit('removeNote', savedNote)
 
     if (notes.length) {

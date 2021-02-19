@@ -11,7 +11,7 @@ PouchDB.plugin(pouchdbFind)
 
 Vue.use(Vuex)
 
-const connectToRemoteDb = (user) => {
+const getRemoteDb = (user) => {
   if (!user) {
     return null
   }
@@ -19,16 +19,20 @@ const connectToRemoteDb = (user) => {
   return new PouchDB(`${couchDbUrl}/${dbName}`, {auth: {username, password}})
 }
 
-const connectToLocalDb = () => {
+const getLocalDb = () => {
   return new PouchDB(`${pouchDbName}`)
 }
 
+
+
+const localDb = getLocalDb()
 const user = getCookie('user') !== undefined ? JSON.parse(getCookie('user')) : null
-const localDb = connectToLocalDb(user)
+const remoteDb = getRemoteDb(user)
 
 const state = {
   user,
   localDb,
+  remoteDb,
   notes: [],
   selectedNote: null,
   isEditorVisible: false
@@ -46,17 +50,12 @@ const getters = {
 }
 
 const mutations = {
-
-  unsetUser(state) {
-    state.user = null
+  setRemoteDb(state) {
+    state.remoteDb = getRemoteDb(state.user)
   },
 
   unsetRemoteDb(state) {
     state.remoteDb = null
-  },
-
-  saveCurrentUser(state) {
-    setCookie('user', JSON.stringify(state.user))
   },
 
   setUser(state, user) {
@@ -66,6 +65,14 @@ const mutations = {
       name,
       dbName: `memohub-${name.split('').map(char => char.charCodeAt(0).toString(16)).join('')}`
     }
+  },
+
+  unsetUser(state) {
+    state.user = null
+  },
+
+  saveCurrentUser(state) {
+    setCookie('user', JSON.stringify(state.user))
   },
 
   setNotes(state, notes) {
@@ -82,10 +89,6 @@ const mutations = {
 
   setEditorVisisble(state, isVisible) {
     state.isEditorVisible = isVisible
-  },
-
-  setRemoteDb(state) {
-    state.remoteDb = connectToRemoteDb(state.user)
   },
 
   addNote(state, note) {
@@ -105,7 +108,7 @@ const actions = {
     commit('unsetRemoteDb')
   },
 
-  async logIn({commit}, {username, password}) {
+  async logIn({commit, dispatch}, {username, password}) {
     const res = await fetch(`${couchDbUrl}/_users/_find`, {
       method: 'POST',
       headers: {
@@ -134,6 +137,7 @@ const actions = {
     commit('setUser', {...json.docs[0], password})
     commit('saveCurrentUser')
     commit('setRemoteDb')
+    dispatch('sync')
 
     return Promise.resolve()
   },
@@ -167,6 +171,22 @@ const actions = {
     return Promise.resolve()
   },
 
+  sync({dispatch, state: {localDb, remoteDb}}) {
+    if (localDb && remoteDb) {
+      localDb.sync(remoteDb, {
+        live: true
+      }).on('change', function ({direction, change}) {
+        console.log('sync change: ', direction, change)
+
+        if (direction === 'pull') {
+          dispatch('fetchAllNotes')
+        }
+      }).on('error', function (err) {
+        console.log('sync error: ', err)
+      })
+    }
+  },
+
   async fetchAllNotes({state: {localDb}, commit}) {
     if (!localDb) {
       return
@@ -175,6 +195,7 @@ const actions = {
     const result = await localDb.allDocs({
       include_docs: true
     })
+
     const notes = result.rows.map(({doc}) => doc)
     commit('setNotes', notes)
     if (notes.length) {

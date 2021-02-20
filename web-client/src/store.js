@@ -202,7 +202,9 @@ const actions = {
 
     const result = await localDb.find({
       selector: {},
-      sort: [{updatedAt: 'desc'}]
+      sort: [{updatedAt: 'desc'}],
+      limit: 10,
+      skip: 0
     })
 
     console.log('result: ', result)

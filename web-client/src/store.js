@@ -87,6 +87,10 @@ const mutations = {
     state.notes = notes
   },
 
+  appendNotes(state, notes) {
+    state.notes = [...state.notes, ...notes]
+  },
+
   setSelectedNote(state, note) {
     state.selectedNote = note
   },
@@ -195,26 +199,32 @@ const actions = {
     }
   },
 
-  async fetchAllNotes({state: {localDb}, commit}) {
+  async fetchAllNotes({state: {localDb, notes}, commit}) {
     if (!localDb) {
       return
     }
 
-    const result = await localDb.find({
-      selector: {},
-      sort: [{updatedAt: 'desc'}],
-      limit: 10,
-      skip: 0
-    })
+    const {doc_count} = await localDb.info()
+    console.log('doc_count: ', doc_count)
 
-    console.log('result: ', result)
 
-    const notes = result.docs
-    commit('setNotes', notes)
-    if (notes.length) {
-      commit('setSelectedNote', notes[0])
-    } else {
-      commit('setSelectedNote', null)
+    commit('setNotes', [])
+    for (let i = 0; i < doc_count; i+=100){
+      const result = await localDb.find({
+        selector: {},
+        sort: [{updatedAt: 'desc'}],
+        limit: 100,
+        skip: i
+      })
+
+      console.log('result: ', result)
+      commit('appendNotes', result.docs)
+
+      if (notes.length) {
+        commit('setSelectedNote', notes[0])
+      } else {
+        commit('setSelectedNote', null)
+      }
     }
   },
 

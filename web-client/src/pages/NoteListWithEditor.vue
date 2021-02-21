@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <div class="col-lg-3 col-md-12">
+    <div class="col-lg-3 col-md-12 scrolled">
       <NotePreview v-for="note in notes"
                    :key="note._id"
                    :note="note"
@@ -8,7 +8,7 @@
     </div>
     <div class="col-9 d-none d-lg-block border-left" v-b-visible="visibleHandler">
       <NoteToolbar :note="selectedNote" />
-      <NoteEditor :note="selectedNote" />
+      <NoteEditor :note="selectedNote"/>
     </div>
   </div>
 </template>
@@ -39,3 +39,10 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  .scrolled {
+    height: calc(100vh - 56px);
+    overflow: scroll;
+  }
+</style>

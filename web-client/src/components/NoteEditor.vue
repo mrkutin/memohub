@@ -59,8 +59,14 @@ input {
 #quill-container.ql-container.ql-snow {
   border: none;
 }
+
 .quillWrapper .ql-snow.ql-toolbar {
   border: none;
   border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+#quill-container{
+  height: calc(100vh - 200px);
+  overflow: scroll;
 }
 </style>

@@ -43,10 +43,21 @@ const state = {
   remoteDb,
   notes: [],
   selectedNote: null,
-  isEditorVisible: false
+  isEditorVisible: false,
+  filter: ''
 }
 
 const getters = {
+  filteredNotes({notes, filter}) {
+
+    console.log('filter: ', filter)
+
+    if (!filter) {
+      return notes
+    }
+    return notes.filter(note => note.caption.match(new RegExp(filter)) || note.text.match(new RegExp(filter)))
+  },
+
   isLoggedIn(state) {
     return state.user !== null
   },
@@ -58,6 +69,10 @@ const getters = {
 }
 
 const mutations = {
+  setFilter(state, filter) {
+    state.filter = filter
+  },
+
   setRemoteDb(state) {
     state.remoteDb = getRemoteDb(state.user)
   },
@@ -116,6 +131,10 @@ const mutations = {
 }
 
 const actions = {
+  applyFilter({commit}, filter) {
+    commit('setFilter', filter)
+  },
+
   logOut({commit}) {
     commit('unsetUser')
     commit('saveCurrentUser')

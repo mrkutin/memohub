@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <div class="col-lg-3 col-md-12 scrolled">
-      <NotePreview v-for="note in notes"
+      <NotePreview v-for="note in filteredNotes"
                    :key="note._id"
                    :note="note"
       />
@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import {mapActions, mapState} from 'vuex'
+import {mapActions, mapState, mapGetters} from 'vuex'
 import NotePreview from '../components/NotePreview'
 import NoteEditor from '../components/NoteEditor'
 import NoteToolbar from '../components/NoteToolbar'
@@ -26,7 +26,10 @@ export default {
     NoteEditor,
     NoteToolbar
   },
-  computed: mapState(['notes', 'isEditorVisible', 'selectedNote']),
+  computed: {
+    ...mapState(['isEditorVisible', 'selectedNote']),
+    ...mapGetters(['filteredNotes'])
+  },
   async mounted() {
     await this.fetchAllNotes()
     await this.sync()

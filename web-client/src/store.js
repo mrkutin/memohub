@@ -95,8 +95,10 @@ const mutations = {
     state.selectedNote = note
   },
 
-  updateSelectedNoteWithId({selectedNote}, _id) {
-    selectedNote._id = _id
+  updateSelectedNote({selectedNote}, updateWith) {
+    Object.keys(updateWith).forEach(key => {
+      selectedNote[key] = updateWith[key]
+    })
   },
 
   setEditorVisisble(state, isVisible) {
@@ -239,17 +241,16 @@ const actions = {
         $or: [
           {
             caption: {
-              $regex: `(?i)${query}`
+              $regex: new RegExp(query, 'i')
             }
           },
           {
             text: {
-              $regex: `(?i)${query}`
+              $regex: new RegExp(query, 'i')
             }
           }
         ]
       },
-      // sort: [{_id: 'desc'}]
     })
     const notes = result.docs
     commit('setNotes', notes)
@@ -275,9 +276,10 @@ const actions = {
       const savedNote = await localDb.get(note._id)
       const newNote = {...note, _rev: savedNote._rev, updatedAt: new Date()}
       await localDb.put(newNote)
+      commit('updateSelectedNote', newNote)
     } else {
-      const id = (await localDb.post(note)).id
-      commit('updateSelectedNoteWithId', id)
+      const _id = (await localDb.post(note)).id
+      commit('updateSelectedNote', {_id})
     }
   },
 

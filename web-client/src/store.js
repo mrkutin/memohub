@@ -204,18 +204,18 @@ const actions = {
       return
     }
 
-    const {doc_count} = await localDb.info()
-    console.log('doc_count: ', doc_count)
-
-
     commit('setNotes', [])
-    for (let i = 0; i < doc_count; i+=100){
-      const result = await localDb.find({
+
+    let result
+    let i = 0
+    do {
+      result = await localDb.find({
         selector: {},
         sort: [{updatedAt: 'desc'}],
         limit: 100,
         skip: i
       })
+      i+=100
 
       console.log('result: ', result)
       commit('appendNotes', result.docs)
@@ -225,7 +225,8 @@ const actions = {
       } else {
         commit('setSelectedNote', null)
       }
-    }
+    } while (Array.isArray(result.docs) && result.docs.length > 0)
+
   },
 
   async fetchQuery({commit}, query) {

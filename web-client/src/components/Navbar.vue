@@ -24,7 +24,7 @@
       <!-- Right aligned nav items -->
       <b-navbar-nav class="ml-auto">
         <b-nav-form v-if="isNotesPage">
-          <b-form-input v-model="query" v-on:keyup="onSearchChange" size="sm" class="mr-sm-2" placeholder="Search"></b-form-input>
+          <b-form-input v-model="query" v-on:keyup="onSearchChange" size="md" class="mr-sm-2" placeholder="Search"></b-form-input>
         </b-nav-form>
 
         <b-nav-item-dropdown right v-if="isLoggedIn">

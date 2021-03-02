@@ -31,6 +31,8 @@ export default {
 
     upload() {
       if (this.files.length) {
+        console.log(this.files)
+
         this.files.forEach(file => {
           const fileReader = new FileReader()
           fileReader.onload = e => {

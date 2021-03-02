@@ -49,9 +49,6 @@ const state = {
 
 const getters = {
   filteredNotes({notes, filter}) {
-
-    console.log('filter: ', filter)
-
     if (!filter) {
       return notes
     }
@@ -131,6 +128,10 @@ const mutations = {
 }
 
 const actions = {
+  uploadFile() {
+
+  },
+
   applyFilter({commit}, filter) {
     commit('setFilter', filter)
   },
@@ -220,7 +221,7 @@ const actions = {
     }
   },
 
-  async fetchAllNotes({state: {localDb, notes}, commit}) {
+  async fetchAllNotes({state: {localDb}, commit}) {
     if (!localDb) {
       return
     }
@@ -237,17 +238,9 @@ const actions = {
         skip: i
       })
       i+=100
-
       console.log('result: ', result)
       commit('appendNotes', result.docs)
-
-      if (notes.length) {
-        commit('setSelectedNote', notes[0])
-      } else {
-        commit('setSelectedNote', null)
-      }
     } while (Array.isArray(result.docs) && result.docs.length > 0)
-
   },
 
   async fetchQuery({commit}, query) {
@@ -287,7 +280,7 @@ const actions = {
   },
 
   async saveNote({state: {localDb}, commit}, note) {
-    if (!localDb) {
+    if (!localDb || note === null) {
       return Promise.resolve()
     }
 

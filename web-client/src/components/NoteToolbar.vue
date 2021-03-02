@@ -27,16 +27,15 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['deleteNote']),
+    ...mapActions(['deleteNote', 'uploadFile']),
 
     upload() {
       if (this.files.length) {
-        console.log(this.files)
-
         this.files.forEach(file => {
           const fileReader = new FileReader()
           fileReader.onload = e => {
-            console.log('event.target.result: ', e.target.result)
+            console.log('file before upload: ', file)
+            this.uploadFile(file, e.target.result)
           }
           fileReader.readAsDataURL(file)
         })

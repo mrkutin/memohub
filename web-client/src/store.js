@@ -128,8 +128,14 @@ const mutations = {
 }
 
 const actions = {
-  uploadFile() {
-
+  async uploadFile({state: {localDb, selectedNote}}, {type, name}, blob) {
+    try {
+      const savedNote = await localDb.get(selectedNote._id)
+      await localDb.putAttachment(savedNote._id, name, savedNote._rev, blob, type)
+      console.log('File uploaded!')
+    } catch (err) {
+      console.log(err)
+    }
   },
 
   applyFilter({commit}, filter) {
@@ -243,35 +249,35 @@ const actions = {
     } while (Array.isArray(result.docs) && result.docs.length > 0)
   },
 
-  async fetchQuery({commit}, query) {
-    if (!localDb) {
-      return
-    }
-
-    const result = await localDb.find({
-      selector: {
-        $or: [
-          {
-            caption: {
-              $regex: new RegExp(query, 'i')
-            }
-          },
-          {
-            text: {
-              $regex: new RegExp(query, 'i')
-            }
-          }
-        ]
-      },
-    })
-    const notes = result.docs
-    commit('setNotes', notes)
-    if (notes.length) {
-      commit('setSelectedNote',)
-    } else {
-      commit('setSelectedNote', null)
-    }
-  },
+  // async fetchQuery({commit}, query) {
+  //   if (!localDb) {
+  //     return
+  //   }
+  //
+  //   const result = await localDb.find({
+  //     selector: {
+  //       $or: [
+  //         {
+  //           caption: {
+  //             $regex: new RegExp(query, 'i')
+  //           }
+  //         },
+  //         {
+  //           text: {
+  //             $regex: new RegExp(query, 'i')
+  //           }
+  //         }
+  //       ]
+  //     },
+  //   })
+  //   const notes = result.docs
+  //   commit('setNotes', notes)
+  //   if (notes.length) {
+  //     commit('setSelectedNote',)
+  //   } else {
+  //     commit('setSelectedNote', null)
+  //   }
+  // },
 
   createNote({commit}) {
     const note = {createdAt: new Date(), updatedAt: new Date()}

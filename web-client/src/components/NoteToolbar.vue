@@ -1,8 +1,5 @@
 <template>
-  <div class="h3 mt-2 mr-3"
-       v-on:click="toggleFilePicker"
-       v-if="note"
-  >
+  <div class="h3 mt-2 mr-3" v-on:click="toggleFilePicker" v-if="note">
     <b-button variant="light">
       <b-icon icon="paperclip"></b-icon>
     </b-button>

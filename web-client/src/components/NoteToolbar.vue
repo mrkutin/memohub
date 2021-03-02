@@ -1,6 +1,6 @@
 <template>
-  <div class="h3 mt-2 mr-3" v-on:click="toggleFilePicker" v-if="note">
-    <b-button variant="light">
+  <div class="h3 mt-2 mr-3" v-if="note">
+    <b-button variant="light" v-on:click="toggleFilePicker" >
       <b-icon icon="paperclip"></b-icon>
     </b-button>
     <b-button variant="light">
@@ -9,8 +9,8 @@
     <b-button variant="light" v-on:click="onDeleteClick">
       <b-icon icon="trash"></b-icon>
     </b-button>
-
-    <b-form-file v-if="showFilePicker" size="sm"/>
+    <b-form-file v-model="files" v-if="showFilePicker" size="sm" multiple/>
+    <b-button variant="light" v-if="showFilePicker" class="mt-2" v-on:click="upload">Upload</b-button>
   </div>
 </template>
 
@@ -22,11 +22,15 @@ export default {
   props: ['note'],
   data () {
     return {
-      showFilePicker: false
+      showFilePicker: false,
+      files: []
     }
   },
   methods: {
     ...mapActions(['deleteNote']),
+    upload() {
+      alert('upload!')
+    },
     toggleFilePicker() {
       this.showFilePicker = !this.showFilePicker
     },

@@ -28,12 +28,23 @@ export default {
   },
   methods: {
     ...mapActions(['deleteNote']),
+
     upload() {
-      alert('upload!')
+      if (this.files.length) {
+        this.files.forEach(file => {
+          const fileReader = new FileReader()
+          fileReader.onload = e => {
+            console.log('event.target.result: ', e.target.result)
+          }
+          fileReader.readAsDataURL(file)
+        })
+      }
     },
+
     toggleFilePicker() {
       this.showFilePicker = !this.showFilePicker
     },
+
     onDeleteClick() {
       if (confirm('Are you sure?')) {
         this.deleteNote(this.note)

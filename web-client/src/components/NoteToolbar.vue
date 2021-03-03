@@ -31,14 +31,25 @@ export default {
 
     upload() {
       if (this.files.length) {
-        this.files.forEach(file => {
-          const fileReader = new FileReader()
-          fileReader.onload = e => {
-            console.log('file before upload: ', file)
-            this.uploadFile(file, e.target.result)
-          }
-          fileReader.readAsDataURL(file)
-        })
+        console.log('this.files[0]: ', this.files[0])
+        const fileReader = new FileReader()
+        fileReader.onload = e => {
+          this.uploadFile({
+            name: this.files[0].name,
+            dataURL: e.target.result})
+        }
+        fileReader.readAsDataURL(this.files[0])
+
+
+        // this.files.forEach(file => {
+        //   const fileReader = new FileReader()
+        //   fileReader.onload = e => {
+        //     this.uploadFile({
+        //       ...file,
+        //       base64Buffer: e.target.result})
+        //   }
+        //   fileReader.readAsDataURL(file)
+        // })
       }
     },
 

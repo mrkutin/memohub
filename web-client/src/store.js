@@ -128,10 +128,24 @@ const mutations = {
 }
 
 const actions = {
-  async uploadFile({state: {localDb, selectedNote}}, {type, name}, blob) {
+  async uploadFile({state: {localDb, selectedNote}}, {name, dataURL}) {
     try {
+      const [head, buffer] = dataURL.split(';base64,')
+      const [, type] = head.split(':')
       const savedNote = await localDb.get(selectedNote._id)
-      await localDb.putAttachment(savedNote._id, name, savedNote._rev, blob, type)
+
+      console.log('name: ', name)
+      console.log('type: ', type)
+      console.log('buffer: ', buffer)
+
+
+      savedNote._attachments = {
+        [name]: {
+          content_type: type,
+          data: buffer
+        }
+      }
+      await localDb.put(savedNote)
       console.log('File uploaded!')
     } catch (err) {
       console.log(err)

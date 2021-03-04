@@ -8,6 +8,7 @@
     </div>
     <div class="col-9 d-none d-lg-block border-left" v-b-visible="visibleHandler">
       <NoteToolbar :note="selectedNote" />
+      <NoteAttachments v-if="selectedNote" :attachments="selectedNote._attachments" />
       <NoteEditor :note="selectedNote"/>
     </div>
   </div>
@@ -18,13 +19,15 @@ import {mapActions, mapState, mapGetters} from 'vuex'
 import NotePreview from '../components/NotePreview'
 import NoteEditor from '../components/NoteEditor'
 import NoteToolbar from '../components/NoteToolbar'
+import NoteAttachments from '../components/NoteAttachments'
 
 export default {
   name: "NoteList",
   components: {
     NotePreview,
     NoteEditor,
-    NoteToolbar
+    NoteToolbar,
+    NoteAttachments
   },
   computed: {
     ...mapState(['isEditorVisible', 'selectedNote']),

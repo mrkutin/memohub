@@ -145,7 +145,6 @@ const actions = {
     const savedNote = await localDb.get(selectedNote._id)
     savedNote._attachments = {...savedNote._attachments, ...attachments}
     await localDb.put(savedNote)
-    console.log('Files uploaded!')
   },
 
   applyFilter({commit}, filter) {

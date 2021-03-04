@@ -128,28 +128,24 @@ const mutations = {
 }
 
 const actions = {
-  async uploadFile({state: {localDb, selectedNote}}, {name, dataURL}) {
-    try {
+  async uploadFiles({state: {localDb, selectedNote}}, files) {
+    if (!Array.isArray(files)) {
+      return Promise.resolve()
+    }
+
+    const attachments = files.reduce((acc, {name, dataURL}) => {
       const [head, buffer] = dataURL.split(';base64,')
       const [, type] = head.split(':')
-      const savedNote = await localDb.get(selectedNote._id)
-
-      console.log('name: ', name)
-      console.log('type: ', type)
-      console.log('buffer: ', buffer)
-
-
-      savedNote._attachments = {
-        [name]: {
-          content_type: type,
-          data: buffer
-        }
+      acc[name] = {
+        content_type: type,
+        data: buffer
       }
-      await localDb.put(savedNote)
-      console.log('File uploaded!')
-    } catch (err) {
-      console.log(err)
-    }
+      return acc
+    }, {})
+    const savedNote = await localDb.get(selectedNote._id)
+    savedNote._attachments = {...savedNote._attachments, ...attachments}
+    await localDb.put(savedNote)
+    console.log('Files uploaded!')
   },
 
   applyFilter({commit}, filter) {
@@ -257,7 +253,7 @@ const actions = {
         limit: 100,
         skip: i
       })
-      i+=100
+      i += 100
       console.log('result: ', result)
       commit('appendNotes', result.docs)
     } while (Array.isArray(result.docs) && result.docs.length > 0)

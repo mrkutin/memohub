@@ -1,6 +1,6 @@
 <template>
   <div class="h3 mt-2 mr-3" v-if="note">
-    <b-button variant="light" v-on:click="toggleFilePicker" >
+    <b-button variant="light" v-on:click="toggleFilePicker">
       <b-icon icon="paperclip"></b-icon>
     </b-button>
     <b-button variant="light">
@@ -20,36 +20,32 @@ import {mapActions} from 'vuex'
 export default {
   name: 'NoteToolbar',
   props: ['note'],
-  data () {
+  data() {
     return {
       showFilePicker: false,
       files: []
     }
   },
   methods: {
-    ...mapActions(['deleteNote', 'uploadFile']),
+    ...mapActions(['deleteNote', 'uploadFiles']),
 
-    upload() {
+    async upload() {
       if (this.files.length) {
-        console.log('this.files[0]: ', this.files[0])
-        const fileReader = new FileReader()
-        fileReader.onload = e => {
-          this.uploadFile({
-            name: this.files[0].name,
-            dataURL: e.target.result})
-        }
-        fileReader.readAsDataURL(this.files[0])
+        const files = await Promise.all(
+            this.files.map(file => new Promise(resolve => {
+                  const fileReader = new FileReader()
+                  fileReader.onload = e => {
+                    return resolve({
+                      name: file.name,
+                      dataURL: e.target.result
+                    })
+                  }
+                  fileReader.readAsDataURL(file)
+                })
+            )
+        )
 
-
-        // this.files.forEach(file => {
-        //   const fileReader = new FileReader()
-        //   fileReader.onload = e => {
-        //     this.uploadFile({
-        //       ...file,
-        //       base64Buffer: e.target.result})
-        //   }
-        //   fileReader.readAsDataURL(file)
-        // })
+        this.uploadFiles(files)
       }
     },
 

@@ -7,8 +7,11 @@
       />
     </div>
     <div class="col-9 d-none d-lg-block border-left" v-b-visible="visibleHandler">
-      <NoteToolbar :note="selectedNote" />
-      <NoteAttachments v-if="selectedNote" :attachments="selectedNote._attachments" />
+      <NoteToolbar :note="selectedNote"/>
+      <NoteAttachment v-for="attachmentName in attachmentNames"
+                      :key="attachmentName"
+                      :attachmentName="attachmentName"
+      />
       <NoteEditor :note="selectedNote"/>
     </div>
   </div>
@@ -19,7 +22,7 @@ import {mapActions, mapState, mapGetters} from 'vuex'
 import NotePreview from '../components/NotePreview'
 import NoteEditor from '../components/NoteEditor'
 import NoteToolbar from '../components/NoteToolbar'
-import NoteAttachments from '../components/NoteAttachments'
+import NoteAttachment from '../components/NoteAttachment'
 
 export default {
   name: "NoteList",
@@ -27,11 +30,17 @@ export default {
     NotePreview,
     NoteEditor,
     NoteToolbar,
-    NoteAttachments
+    NoteAttachment
   },
   computed: {
     ...mapState(['isEditorVisible', 'selectedNote']),
-    ...mapGetters(['filteredNotes'])
+    ...mapGetters(['filteredNotes']),
+    attachmentNames() {
+      if (!this.selectedNote) {
+        return []
+      }
+      return Object.keys(this.selectedNote._attachments)
+    }
   },
   async mounted() {
     await this.fetchAllNotes()
@@ -47,8 +56,8 @@ export default {
 </script>
 
 <style scoped>
-  .scrolled {
-    height: calc(100vh - 56px);
-    overflow: scroll;
-  }
+.scrolled {
+  height: calc(100vh - 56px);
+  overflow: scroll;
+}
 </style>

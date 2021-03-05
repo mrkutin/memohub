@@ -128,6 +128,22 @@ const mutations = {
 }
 
 const actions = {
+  async downloadFiles({state: {localDb, selectedNote}}){
+
+    console.log('downloadFiles', selectedNote)
+
+    if(!selectedNote._attachments){
+      return Promise.resolve()
+    }
+
+    const attachments = await Promise.all(Object.keys(selectedNote._attachments).map(attachmentName =>
+      localDb.getAttachment(selectedNote._id, attachmentName)
+    ))
+
+    console.log('attachments: ', attachments)
+    return Promise.resolve(attachments)
+  },
+
   async uploadFiles({state: {localDb, selectedNote}}, files) {
     if (!Array.isArray(files)) {
       return Promise.resolve()
@@ -258,40 +274,10 @@ const actions = {
     } while (Array.isArray(result.docs) && result.docs.length > 0)
   },
 
-  // async fetchQuery({commit}, query) {
-  //   if (!localDb) {
-  //     return
-  //   }
-  //
-  //   const result = await localDb.find({
-  //     selector: {
-  //       $or: [
-  //         {
-  //           caption: {
-  //             $regex: new RegExp(query, 'i')
-  //           }
-  //         },
-  //         {
-  //           text: {
-  //             $regex: new RegExp(query, 'i')
-  //           }
-  //         }
-  //       ]
-  //     },
-  //   })
-  //   const notes = result.docs
-  //   commit('setNotes', notes)
-  //   if (notes.length) {
-  //     commit('setSelectedNote',)
-  //   } else {
-  //     commit('setSelectedNote', null)
-  //   }
-  // },
-
-  createNote({commit}) {
+  createNote({commit, dispatch}) {
     const note = {createdAt: new Date(), updatedAt: new Date()}
     commit('addNote', note)
-    commit('setSelectedNote', note)
+    dispatch('selectNote', note)
   },
 
   async saveNote({state: {localDb}, commit}, note) {
@@ -310,15 +296,16 @@ const actions = {
     }
   },
 
-  selectNote({commit}, note) {
+  selectNote({commit, dispatch}, note) {
     commit('setSelectedNote', note)
+    dispatch('downloadFiles')
   },
 
   updateEditorVisible({commit}, isVisible) {
     commit('setEditorVisisble', isVisible)
   },
 
-  async deleteNote({commit, state: {localDb, notes}}, note) {
+  async deleteNote({commit, dispatch, state: {localDb, notes}}, note) {
     if (!localDb) {
       return
     }
@@ -328,7 +315,7 @@ const actions = {
     commit('removeNote', savedNote)
 
     if (notes.length) {
-      commit('setSelectedNote', notes[0])
+      dispatch('selectNote', notes[0])
     }
   }
 }

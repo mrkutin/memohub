@@ -17,6 +17,12 @@ import NoteAttachment from '../components/NoteAttachment'
 
 export default {
   name: 'Note',
+  data() {
+    return {
+      attachments: []
+    }
+  },
+
   components: {
     NoteToolbar,
     NoteAttachment,
@@ -31,5 +37,6 @@ export default {
       return Object.keys(this.selectedNote._attachments)
     }
   }
+
 }
 </script>

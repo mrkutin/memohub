@@ -7,40 +7,24 @@
       />
     </div>
     <div class="col-9 d-none d-lg-block border-left" v-b-visible="visibleHandler">
-      <NoteToolbar :note="selectedNote"/>
-      <NoteAttachment v-for="attachmentName in attachmentNames"
-                      :key="attachmentName"
-                      :attachmentName="attachmentName"
-      />
-      <NoteEditor :note="selectedNote"/>
+      <Note />
     </div>
   </div>
 </template>
 
 <script>
-import {mapActions, mapState, mapGetters} from 'vuex'
+import {mapActions, mapGetters} from 'vuex'
 import NotePreview from '../components/NotePreview'
-import NoteEditor from '../components/NoteEditor'
-import NoteToolbar from '../components/NoteToolbar'
-import NoteAttachment from '../components/NoteAttachment'
+import Note from '../components/Note'
 
 export default {
-  name: "NoteList",
+  name: 'NoteList',
   components: {
     NotePreview,
-    NoteEditor,
-    NoteToolbar,
-    NoteAttachment
+    Note
   },
   computed: {
-    ...mapState(['isEditorVisible', 'selectedNote']),
     ...mapGetters(['filteredNotes']),
-    attachmentNames() {
-      if (!this.selectedNote) {
-        return []
-      }
-      return Object.keys(this.selectedNote._attachments)
-    }
   },
   async mounted() {
     await this.fetchAllNotes()
